@@ -12,7 +12,7 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
 .header { text-align: center; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(56,189,248,0.15); }
 .header h1 { font-size: 26px; font-weight: 800; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase; }
 .header p { margin-top: 8px; color: #94a3b8; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; }
-.steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px; }
+.steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px; flex-wrap: wrap; }
 .step-item { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .step-num { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #1e293b; background: #1e293b; color: #475569; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
 .step-item.active .step-num { border-color: #38bdf8; background: #38bdf8; color: #0a0e1a; }
@@ -20,14 +20,18 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
 .step-label { font-size: 12px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s; }
 .step-item.active .step-label { color: #38bdf8; }
 .step-item.done .step-label { color: #64748b; }
-.step-line { width: 48px; height: 1px; background: #1e293b; margin: 0 4px; }
+.step-line { width: 40px; height: 1px; background: #1e293b; margin: 0 4px; }
 .step-line.done { background: #38bdf8; }
 .card { background: #0f172a; border: 1px solid rgba(56,189,248,0.12); border-radius: 16px; padding: 32px; margin-bottom: 24px; }
 .card-title { font-size: 13px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
 .card-title::before { content: ''; display: inline-block; width: 3px; height: 16px; background: #38bdf8; border-radius: 2px; }
 .field { margin-bottom: 20px; }
 .field label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-.field input[type="text"], .field input[type="number"], .field input[type="date"] { width: 100%; background: #1e293b; border: 1px solid rgba(56,189,248,0.15); border-radius: 8px; padding: 12px 16px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500; color: #e2e8f0; outline: none; transition: border-color 0.2s; }
+.field input[type="text"], .field input[type="number"], .field input[type="date"], .field input[type="password"] {
+  width: 100%; background: #1e293b; border: 1px solid rgba(56,189,248,0.15); border-radius: 8px;
+  padding: 12px 16px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500;
+  color: #e2e8f0; outline: none; transition: border-color 0.2s;
+}
 .field input[type="date"] { color-scheme: dark; }
 .field input:focus { border-color: #38bdf8; }
 .field .goal-hint { font-size: 11px; color: #475569; margin-top: 6px; font-weight: 500; }
@@ -53,8 +57,7 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
 .btn-copy:hover { background: rgba(56,189,248,0.2); }
 .btn-copy.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: #22c55e; }
 .btn-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px; }
-.btn-row-between { display: flex; gap: 12px; justify-content: space-between; margin-top: 28px; }
-.output-section { margin-bottom: 28px; }
+.btn-row-between { display: flex; gap: 12px; justify-content: space-between; margin-top: 28px; flex-wrap: wrap; }
 .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .output-label { font-size: 12px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
 .output-box { background: #1e293b; border: 1px solid rgba(56,189,248,0.12); border-radius: 10px; padding: 20px; font-size: 13px; line-height: 1.8; color: #cbd5e1; white-space: pre-wrap; word-break: break-word; }
@@ -66,23 +69,56 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
 .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
 .view { display: none; }
 .view.active { display: block; }
-.section-divider { border: none; border-top: 1px solid rgba(56,189,248,0.08); margin: 24px 0; }
-.notes-area { width: 100%; background: #1e293b; border: 1px solid rgba(56,189,248,0.15); border-radius: 8px; padding: 14px 16px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 400; color: #e2e8f0; outline: none; resize: vertical; min-height: 160px; line-height: 1.7; transition: border-color 0.2s; }
+.notes-area { width: 100%; background: #1e293b; border: 1px solid rgba(56,189,248,0.15); border-radius: 8px; padding: 14px 16px; font-family: 'Montserrat', sans-serif; font-size: 13px; color: #e2e8f0; outline: none; resize: vertical; min-height: 140px; line-height: 1.7; transition: border-color 0.2s; }
 .notes-area:focus { border-color: #38bdf8; }
 .notes-area::placeholder { color: #475569; }
-.notes-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+.info-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.12); font-size: 11px; color: #64748b; font-weight: 500; margin-bottom: 12px; }
+/* RECORDING STYLES */
+.record-zone { background: #0d1b2a; border: 1px solid rgba(56,189,248,0.15); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.record-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+.record-title { font-size: 12px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; }
+.record-status { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #475569; }
+.record-dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; transition: background 0.3s; }
+.record-dot.listening { background: #ef4444; animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+.record-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-record { padding: 10px 20px; border: none; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 7px; }
+.btn-record-start { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.35); color: #f87171; }
+.btn-record-start:hover { background: rgba(239,68,68,0.25); }
+.btn-record-stop { background: rgba(100,116,139,0.15); border: 1px solid rgba(100,116,139,0.3); color: #94a3b8; }
+.btn-record-stop:hover { background: rgba(100,116,139,0.25); }
+.btn-record-stop:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-ai-extract { background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(56,189,248,0.15)); border: 1px solid rgba(168,85,247,0.35); color: #c084fc; }
+.btn-ai-extract:hover { background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(56,189,248,0.25)); }
+.btn-ai-extract:disabled { opacity: 0.35; cursor: not-allowed; }
+.transcript-box { background: #0a0e1a; border: 1px solid rgba(56,189,248,0.08); border-radius: 8px; padding: 14px; min-height: 80px; max-height: 260px; overflow-y: auto; font-size: 12px; line-height: 1.7; color: #94a3b8; margin-top: 12px; white-space: pre-wrap; }
+.transcript-box .interim { color: #475569; font-style: italic; }
+.transcript-box .final { color: #cbd5e1; }
+.transcript-placeholder { color: #334155; font-style: italic; }
+.groq-status { margin-top: 10px; font-size: 11px; color: #64748b; font-weight: 500; display: flex; align-items: center; gap: 6px; min-height: 18px; }
+.groq-spinner { width: 10px; height: 10px; border: 2px solid rgba(168,85,247,0.3); border-top-color: #c084fc; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.api-key-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.api-key-row label { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+.api-key-row input { flex: 1; min-width: 200px; background: #0f172a; border: 1px solid rgba(168,85,247,0.2); border-radius: 6px; padding: 8px 12px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: #c084fc; outline: none; }
+.api-key-row input:focus { border-color: rgba(168,85,247,0.5); }
+.api-key-row input::placeholder { color: #334155; }
+.api-key-hint { font-size: 10px; color: #475569; margin-top: -10px; margin-bottom: 14px; }
+.api-key-hint a { color: #7c3aed; text-decoration: none; }
+.api-key-hint a:hover { color: #c084fc; }
+.extracted-banner { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #4ade80; font-weight: 600; display: none; margin-top: 10px; }
+.notes-tabs { display: flex; gap: 4px; margin-bottom: 14px; }
 .notes-tab { padding: 7px 16px; border: 1px solid rgba(56,189,248,0.15); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; background: transparent; color: #64748b; transition: all 0.2s; }
 .notes-tab.active { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.4); color: #38bdf8; }
-.notes-tab:hover { border-color: rgba(56,189,248,0.3); color: #94a3b8; }
-.info-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.12); font-size: 11px; color: #64748b; font-weight: 500; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">
     <h1>TEX 1:1 Performance Tool</h1>
-    <p>Manager toolkit - Generate your 1:1 conversation guide and follow-up email in seconds</p>
+    <p>Manager toolkit &mdash; Generate your 1:1 conversation guide and follow-up email in seconds</p>
   </div>
+
   <!-- STEP INDICATOR -->
   <div class="steps" id="stepIndicator">
     <div class="step-item active" id="si1"><div class="step-num">1</div><div class="step-label">Rep Info</div></div>
@@ -123,6 +159,7 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
       </div>
     </div>
   </div>
+
   <!-- VIEW 2: METRICS -->
   <div class="view" id="view2">
     <div class="card">
@@ -130,59 +167,38 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
       <div class="info-chip">&#128197; Enter actuals for the full week &mdash; goals are calculated for 5 working days</div>
       <div class="metric-grid">
         <div class="metric-card">
-          <div class="metric-header">
-            <span class="metric-name">MRR</span>
-            <span class="metric-goal" id="goalMRR">Goal: $12,000</span>
-          </div>
-          <input type="text" id="valMRR" placeholder="e.g. $9,450" oninput="updateStatus('MRR')" />
+          <div class="metric-header"><span class="metric-name">MRR</span><span class="metric-goal" id="goalMRR">Goal: $12,000</span></div>
+          <input type="text" id="valMRR" placeholder="e.g. $9,450" />
           <div class="metric-hint">Monthly Recurring Revenue (monthly target)</div>
         </div>
         <div class="metric-card">
-          <div class="metric-header">
-            <span class="metric-name">ASP</span>
-            <span class="metric-goal" id="goalASP">Goal: $135</span>
-          </div>
-          <input type="text" id="valASP" placeholder="e.g. $128" oninput="updateStatus('ASP')" />
+          <div class="metric-header"><span class="metric-name">ASP</span><span class="metric-goal" id="goalASP">Goal: $135</span></div>
+          <input type="text" id="valASP" placeholder="e.g. $128" />
           <div class="metric-hint">Average Selling Price per deal</div>
         </div>
         <div class="metric-card">
-          <div class="metric-header">
-            <span class="metric-name">Attachment Rate</span>
-            <span class="metric-goal">Goal: 45%</span>
-          </div>
-          <input type="text" id="valAttach" placeholder="e.g. 38%" oninput="updateStatus('Attach')" />
+          <div class="metric-header"><span class="metric-name">Attachment Rate</span><span class="metric-goal">Goal: 45%</span></div>
+          <input type="text" id="valAttach" placeholder="e.g. 38%" />
           <div class="metric-hint">Add-on attachment % for the week</div>
         </div>
         <div class="metric-card">
-          <div class="metric-header">
-            <span class="metric-name">On-Call TTP</span>
-            <span class="metric-goal">Goal: 65%</span>
-          </div>
-          <input type="text" id="valOnCallTTP" placeholder="e.g. 58%" oninput="updateStatus('OnCallTTP')" />
+          <div class="metric-header"><span class="metric-name">On-Call TTP</span><span class="metric-goal">Goal: 65%</span></div>
+          <input type="text" id="valOnCallTTP" placeholder="e.g. 58%" />
           <div class="metric-hint">Trial-to-paid rate on live calls (week)</div>
         </div>
         <div class="metric-card">
-          <div class="metric-header">
-            <span class="metric-name">Overall TTP</span>
-            <span class="metric-goal">Goal: 65%</span>
-          </div>
-          <input type="text" id="valOverallTTP" placeholder="e.g. 61%" oninput="updateStatus('OverallTTP')" />
+          <div class="metric-header"><span class="metric-name">Overall TTP</span><span class="metric-goal">Goal: 65%</span></div>
+          <input type="text" id="valOverallTTP" placeholder="e.g. 61%" />
           <div class="metric-hint">Overall trial-to-paid rate for the week</div>
         </div>
         <div class="metric-card">
-          <div class="metric-header">
-            <span class="metric-name">Weekly Revenue</span>
-            <span class="metric-goal" id="goalWeekly">Goal: $2,855/wk</span>
-          </div>
-          <input type="text" id="valWeekly" placeholder="e.g. $2,200" oninput="updateStatus('Weekly')" />
+          <div class="metric-header"><span class="metric-name">Weekly Revenue</span><span class="metric-goal" id="goalWeekly">Goal: $2,855/wk</span></div>
+          <input type="text" id="valWeekly" placeholder="e.g. $2,200" />
           <div class="metric-hint">Total revenue output for the week</div>
         </div>
         <div class="metric-card">
-          <div class="metric-header">
-            <span class="metric-name">FTKO (Kick-offs)</span>
-            <span class="metric-goal" id="goalFTKO">Goal: 40/wk</span>
-          </div>
-          <input type="text" id="valFTKO" placeholder="e.g. 28" oninput="updateStatus('FTKO')" />
+          <div class="metric-header"><span class="metric-name">FTKO (Kick-offs)</span><span class="metric-goal" id="goalFTKO">Goal: 40/wk</span></div>
+          <input type="text" id="valFTKO" placeholder="e.g. 28" />
           <div class="metric-hint">First-touch kick-off calls for the week</div>
         </div>
       </div>
@@ -196,44 +212,77 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
   <div class="view" id="view3">
     <div class="card">
       <div class="card-title">Call Notes &amp; Transcript</div>
-      <p style="font-size:13px;color:#64748b;margin-bottom:20px;line-height:1.6;">Add notes from your 1:1 call or paste a Zoom/TEX transcript. This will be included in the conversation guide and follow-up email to reflect what was actually discussed.</p>
+      <p style="font-size:13px;color:#64748b;margin-bottom:20px;line-height:1.6;">Record your 1:1 live using your microphone, or manually type notes. Groq AI will automatically extract committed actions and key themes for the email.</p>
+
+      <!-- GROQ API KEY -->
+      <div class="api-key-row">
+        <label>&#129302; Groq API Key</label>
+        <input type="password" id="groqApiKey" placeholder="gsk_..." autocomplete="off" />
+      </div>
+      <div class="api-key-hint">Free key at <a href="https://console.groq.com" target="_blank">console.groq.com</a> &mdash; no credit card needed. Key is stored in your browser only.</div>
+
+      <!-- LIVE RECORDING ZONE -->
+      <div class="record-zone">
+        <div class="record-header">
+          <div class="record-title">&#127908; Live 1:1 Transcription</div>
+          <div class="record-status">
+            <div class="record-dot" id="recordDot"></div>
+            <span id="recordStatusText">Ready</span>
+          </div>
+        </div>
+        <div class="record-controls">
+          <button class="btn-record btn-record-start" id="btnStartRec" onclick="startRecording()">&#9654; Start Listening</button>
+          <button class="btn-record btn-record-stop" id="btnStopRec" onclick="stopRecording()" disabled>&#9646;&#9646; Stop</button>
+          <button class="btn-record btn-ai-extract" id="btnAiExtract" onclick="runGroqExtract()" disabled>&#10024; AI Extract Notes</button>
+        </div>
+        <div class="transcript-box" id="transcriptBox"><span class="transcript-placeholder">Transcript will appear here as you speak during the call...</span></div>
+        <div class="groq-status" id="groqStatus"></div>
+        <div class="extracted-banner" id="extractedBanner">&#10003; AI extracted notes and actions below &mdash; review and edit as needed</div>
+      </div>
+
+      <!-- MANUAL NOTES TABS -->
       <div class="notes-tabs">
         <button class="notes-tab active" id="tabManagerNotes" onclick="switchNotesTab('manager')">&#9998; Manager Notes</button>
-        <button class="notes-tab" id="tabTranscript" onclick="switchNotesTab('transcript')">&#128196; Paste Transcript</button>
+        <button class="notes-tab" id="tabPasteTranscript" onclick="switchNotesTab('paste')">&#128196; Paste Transcript</button>
       </div>
+
       <!-- Manager Notes Panel -->
       <div id="panelManagerNotes">
         <div class="field">
           <label>Key Discussion Points</label>
-          <textarea class="notes-area" id="discussionPoints" placeholder="What did you discuss on the call? Key themes, concerns raised by the rep, your observations...&#10;&#10;e.g. Rep mentioned struggling with objection handling on pricing. Discussed role-play exercise. Rep committed to reviewing 3 lost call transcripts in TEX app this week."></textarea>
+          <textarea class="notes-area" id="discussionPoints" placeholder="What did you discuss on the call? Key themes, concerns raised by the rep, your observations...&#10;&#10;e.g. Rep mentioned struggling with objection handling on pricing. Discussed role-play exercise."></textarea>
         </div>
         <div class="field">
           <label>Committed Actions (from the call)</label>
-          <textarea class="notes-area" id="committedActions" style="min-height:100px;" placeholder="List the specific actions the rep committed to on the call...&#10;&#10;e.g.&#10;1. Review 3 lost call transcripts by Wednesday&#10;2. Role-play pricing objection with manager on Thursday&#10;3. Hit 45 FTKOs this week (9/day)"></textarea>
+          <textarea class="notes-area" id="committedActions" style="min-height:100px;" placeholder="List the specific actions the rep committed to...&#10;&#10;e.g.&#10;1. Review 3 lost call transcripts by Wednesday&#10;2. Role-play pricing objection with manager on Thursday&#10;3. Hit 45 FTKOs this week"></textarea>
         </div>
         <div class="field">
-          <label>Manager Observations / Coaching Focus</label>
-          <textarea class="notes-area" id="coachingFocus" style="min-height:90px;" placeholder="Private coaching notes or areas to monitor (not included in rep-facing email)..."></textarea>
+          <label>Manager Observations / Coaching Focus <span style="color:#334155;font-size:10px;font-weight:500;">(private &mdash; not in rep email)</span></label>
+          <textarea class="notes-area" id="coachingFocus" style="min-height:90px;" placeholder="Private coaching notes or areas to monitor..."></textarea>
         </div>
       </div>
-      <!-- Transcript Panel -->
-      <div id="panelTranscript" style="display:none;">
+
+      <!-- Paste Transcript Panel -->
+      <div id="panelPasteTranscript" style="display:none;">
         <div class="field">
           <label>Zoom / TEX Transcript</label>
-          <textarea class="notes-area" id="zoomTranscript" style="min-height:220px;" placeholder="Paste your full Zoom or TEX Transcription App transcript here. Key committed actions and discussion themes will be pulled into the guide and email automatically..."></textarea>
+          <textarea class="notes-area" id="zoomTranscript" style="min-height:220px;" placeholder="Paste your full Zoom or TEX Transcription App transcript here. Click 'AI Extract Notes' above to auto-fill the fields..."></textarea>
         </div>
-        <div class="info-chip" style="margin-top:4px;">&#128161; Tip: Export transcript from Zoom &rarr; Meeting Summary, or from TEX Transcription App. The full transcript will be summarized in context for the email.</div>
+        <div class="info-chip">&#128161; Tip: Export from Zoom &rarr; Meeting Summary, or from TEX Transcription App. Then click AI Extract Notes.</div>
+        <button class="btn-record btn-ai-extract" style="margin-top:8px;" onclick="runGroqExtractFromPaste()">&#10024; AI Extract Notes from Transcript</button>
       </div>
+
       <div class="btn-row-between">
         <button class="btn btn-secondary" onclick="goToStep(2)">&larr; Back to Metrics</button>
         <button class="btn btn-primary" onclick="generate()">Generate Guide + Email &rarr;</button>
       </div>
     </div>
   </div>
+
   <!-- VIEW 4: RESULTS -->
   <div class="view" id="view4">
     <div class="card">
-      <div class="card-title">Performance Summary - <span id="summaryRepName"></span></div>
+      <div class="card-title">Performance Summary &mdash; <span id="summaryRepName"></span></div>
       <div class="badge-row" id="badgeRow"></div>
     </div>
     <div class="card">
@@ -257,13 +306,18 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
   </div>
 </div>
 <script>
+// =============================================
+// DATA & GOALS
+// =============================================
 let repType = 'non-delta';
 const goals = {
   'non-delta': { mrr: 12000, asp: 135, attach: 45, ttp: 65, weeklyRev: 2855, ftko: 40 },
   'delta':     { mrr: 15000, asp: 155, attach: 45, ttp: 65, weeklyRev: 3570, ftko: 40 }
 };
 
-// --- DATE PICKER AUTO-LOAD ---
+// =============================================
+// DATE PICKER
+// =============================================
 function getMondayOfWeek(date) {
   const d = new Date(date);
   const day = d.getDay();
@@ -272,10 +326,10 @@ function getMondayOfWeek(date) {
   return d;
 }
 function getSundayOfWeek(date) {
-  const monday = getMondayOfWeek(date);
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  return sunday;
+  const m = getMondayOfWeek(date);
+  const s = new Date(m);
+  s.setDate(m.getDate() + 6);
+  return s;
 }
 function formatDateMDY(date) {
   return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -284,53 +338,249 @@ function toInputDate(date) {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');
   const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
+  return y + '-' + m + '-' + d;
 }
 function updateWeekDisplay() {
   const input = document.getElementById('reviewDate');
   if (!input.value) { document.getElementById('weekDisplay').textContent = ''; return; }
-  const selected = new Date(input.value + 'T12:00:00');
-  const monday = getMondayOfWeek(selected);
-  const sunday = getSundayOfWeek(selected);
-  document.getElementById('weekDisplay').textContent = `Week of ${formatDateMDY(monday)} – ${formatDateMDY(sunday)}`;
+  const sel = new Date(input.value + 'T12:00:00');
+  const mon = getMondayOfWeek(sel);
+  const sun = getSundayOfWeek(sel);
+  document.getElementById('weekDisplay').textContent = 'Week of ' + formatDateMDY(mon) + ' – ' + formatDateMDY(sun);
 }
 function initDatePicker() {
-  // Auto-set to Monday of previous week (the week being reviewed)
   const today = new Date();
   const thisMonday = getMondayOfWeek(today);
   const prevMonday = new Date(thisMonday);
   prevMonday.setDate(thisMonday.getDate() - 7);
-  const input = document.getElementById('reviewDate');
-  input.value = toInputDate(prevMonday);
+  document.getElementById('reviewDate').value = toInputDate(prevMonday);
   updateWeekDisplay();
 }
 
-// --- REP TYPE ---
+// =============================================
+// REP TYPE
+// =============================================
 function setRepType(type) {
   repType = type;
   document.getElementById('btnNonDelta').classList.toggle('active', type === 'non-delta');
   document.getElementById('btnDelta').classList.toggle('active', type === 'delta');
   const g = goals[type];
-  document.getElementById('repTypeHint').innerHTML = `Weekly Goals: MRR $${g.mrr.toLocaleString()} &bull; ASP $${g.asp} &bull; TTP ${g.ttp}% &bull; Weekly Revenue $${g.weeklyRev.toLocaleString()} &bull; FTKO ${g.ftko}/wk`;
-  document.getElementById('goalMRR').textContent = `Goal: $${g.mrr.toLocaleString()}`;
-  document.getElementById('goalASP').textContent = `Goal: $${g.asp}`;
-  document.getElementById('goalWeekly').textContent = `Goal: $${g.weeklyRev.toLocaleString()}/wk`;
-  document.getElementById('goalFTKO').textContent = `Goal: ${g.ftko}/wk`;
+  document.getElementById('repTypeHint').innerHTML = 'Weekly Goals: MRR $' + g.mrr.toLocaleString() + ' &bull; ASP $' + g.asp + ' &bull; TTP ' + g.ttp + '% &bull; Weekly Revenue $' + g.weeklyRev.toLocaleString() + ' &bull; FTKO ' + g.ftko + '/week';
+  document.getElementById('goalMRR').textContent = 'Goal: $' + g.mrr.toLocaleString();
+  document.getElementById('goalASP').textContent = 'Goal: $' + g.asp;
+  document.getElementById('goalWeekly').textContent = 'Goal: $' + g.weeklyRev.toLocaleString() + '/wk';
+  document.getElementById('goalFTKO').textContent = 'Goal: ' + g.ftko + '/wk';
 }
 
-// --- NOTES TABS ---
+// =============================================
+// NOTES TABS
+// =============================================
 function switchNotesTab(tab) {
   document.getElementById('tabManagerNotes').classList.toggle('active', tab === 'manager');
-  document.getElementById('tabTranscript').classList.toggle('active', tab === 'transcript');
+  document.getElementById('tabPasteTranscript').classList.toggle('active', tab === 'paste');
   document.getElementById('panelManagerNotes').style.display = tab === 'manager' ? 'block' : 'none';
-  document.getElementById('panelTranscript').style.display = tab === 'transcript' ? 'block' : 'none';
+  document.getElementById('panelPasteTranscript').style.display = tab === 'paste' ? 'block' : 'none';
 }
 
-// --- STEP NAVIGATION ---
+// =============================================
+// GROQ API KEY PERSISTENCE
+// =============================================
+function loadGroqKey() {
+  const saved = localStorage.getItem('groq_api_key');
+  if (saved) document.getElementById('groqApiKey').value = saved;
+}
+function getGroqKey() {
+  const key = document.getElementById('groqApiKey').value.trim();
+  if (key) localStorage.setItem('groq_api_key', key);
+  return key;
+}
+
+// =============================================
+// WEB SPEECH API
+// =============================================
+let recognition = null;
+let finalTranscript = '';
+let isListening = false;
+
+function isSpeechSupported() {
+  return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+}
+
+function startRecording() {
+  if (!isSpeechSupported()) {
+    alert('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
+    return;
+  }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+
+  recognition.onstart = () => {
+    isListening = true;
+    document.getElementById('recordDot').classList.add('listening');
+    document.getElementById('recordStatusText').textContent = 'Listening...';
+    document.getElementById('btnStartRec').disabled = true;
+    document.getElementById('btnStopRec').disabled = false;
+    if (!finalTranscript) {
+      document.getElementById('transcriptBox').innerHTML = '<span class="final"></span><span class="interim"></span>';
+    }
+  };
+
+  recognition.onresult = (event) => {
+    let interim = '';
+    let newFinal = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        newFinal += t + ' ';
+      } else {
+        interim += t;
+      }
+    }
+    if (newFinal) finalTranscript += newFinal;
+    const box = document.getElementById('transcriptBox');
+    box.innerHTML = '<span class="final">' + finalTranscript + '</span><span class="interim">' + interim + '</span>';
+    box.scrollTop = box.scrollHeight;
+    if (finalTranscript.trim().length > 20) {
+      document.getElementById('btnAiExtract').disabled = false;
+    }
+  };
+
+  recognition.onerror = (event) => {
+    const msg = event.error === 'not-allowed' ? 'Microphone access denied. Please allow mic access and try again.' :
+                event.error === 'no-speech' ? 'No speech detected. Still listening...' :
+                'Error: ' + event.error;
+    document.getElementById('groqStatus').textContent = msg;
+    if (event.error !== 'no-speech') stopRecording();
+  };
+
+  recognition.onend = () => {
+    if (isListening) {
+      try { recognition.start(); } catch(e) { stopRecordingCleanup(); }
+    }
+  };
+
+  recognition.start();
+}
+
+function stopRecording() {
+  isListening = false;
+  if (recognition) { try { recognition.stop(); } catch(e) {} }
+  stopRecordingCleanup();
+}
+
+function stopRecordingCleanup() {
+  isListening = false;
+  document.getElementById('recordDot').classList.remove('listening');
+  document.getElementById('recordStatusText').textContent = finalTranscript.trim() ? 'Recorded (' + Math.round(finalTranscript.split(' ').length) + ' words)' : 'Stopped';
+  document.getElementById('btnStartRec').disabled = false;
+  document.getElementById('btnStopRec').disabled = true;
+  if (finalTranscript.trim().length > 20) {
+    document.getElementById('btnAiExtract').disabled = false;
+  }
+}
+
+// =============================================
+// GROQ AI EXTRACTION
+// =============================================
+async function callGroq(apiKey, transcript) {
+  const prompt = `You are analyzing a manager 1:1 performance conversation transcript. Extract the following from the transcript and respond ONLY with valid JSON, no markdown, no explanation.
+
+{
+  "discussionPoints": "2-4 sentence summary of key themes and topics discussed",
+  "committedActions": "numbered list of specific actions the rep committed to, one per line starting with 1. 2. 3. etc",
+  "coachingFocus": "1-2 sentence private coaching observation for the manager"
+}
+
+Transcript:
+${transcript}`;
+
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + apiKey,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      model: 'llama3-8b-8192',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.3,
+      max_tokens: 600
+    })
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error?.message || 'Groq API error ' + response.status);
+  }
+
+  const data = await response.json();
+  const content = data.choices?.[0]?.message?.content || '';
+  const jsonMatch = content.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('Could not parse AI response');
+  return JSON.parse(jsonMatch[0]);
+}
+
+async function runGroqExtract() {
+  const apiKey = getGroqKey();
+  const transcript = finalTranscript.trim();
+  if (!transcript) { setGroqStatus('No transcript to extract from.', false); return; }
+  if (!apiKey) {
+    setGroqStatus('Enter your Groq API key above to use AI extraction.', false);
+    return;
+  }
+  await doExtract(apiKey, transcript);
+}
+
+async function runGroqExtractFromPaste() {
+  const apiKey = getGroqKey();
+  const transcript = document.getElementById('zoomTranscript').value.trim();
+  if (!transcript) { setGroqStatus('Paste a transcript first.', false); return; }
+  if (!apiKey) {
+    setGroqStatus('Enter your Groq API key above to use AI extraction.', false);
+    return;
+  }
+  await doExtract(apiKey, transcript);
+}
+
+async function doExtract(apiKey, transcript) {
+  setGroqStatus('', true);
+  document.getElementById('extractedBanner').style.display = 'none';
+  try {
+    const result = await callGroq(apiKey, transcript);
+    if (result.discussionPoints) document.getElementById('discussionPoints').value = result.discussionPoints;
+    if (result.committedActions) document.getElementById('committedActions').value = result.committedActions;
+    if (result.coachingFocus) document.getElementById('coachingFocus').value = result.coachingFocus;
+    switchNotesTab('manager');
+    setGroqStatus('AI extraction complete.', false, true);
+    document.getElementById('extractedBanner').style.display = 'block';
+  } catch(e) {
+    setGroqStatus('Error: ' + e.message, false);
+  }
+}
+
+function setGroqStatus(msg, loading, success) {
+  const el = document.getElementById('groqStatus');
+  if (loading) {
+    el.innerHTML = '<div class="groq-spinner"></div> Sending to Groq AI (llama3-8b-8192)...';
+  } else if (success) {
+    el.innerHTML = '<span style="color:#4ade80;">✓ ' + msg + '</span>';
+  } else {
+    el.textContent = msg;
+  }
+}
+
+// =============================================
+// NAVIGATION
+// =============================================
 function goToStep(step) {
   if (step === 2) {
-    const rep = document.getElementById('repName').value.trim();
-    if (!rep) { alert('Please enter the rep name first.'); return; }
+    if (!document.getElementById('repName').value.trim()) {
+      alert('Please enter the rep name first.');
+      return;
+    }
   }
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view' + step).classList.add('active');
@@ -350,10 +600,10 @@ function updateStepIndicator(current) {
   }
 }
 
-// --- HELPERS ---
-function parseNum(val) {
-  return parseFloat((val || '').replace(/[^0-9.]/g, '')) || 0;
-}
+// =============================================
+// HELPERS
+// =============================================
+function parseNum(val) { return parseFloat((val || '').replace(/[^0-9.]/g, '')) || 0; }
 function getStatus(value, goal) {
   const pct = (value / goal) * 100;
   if (pct >= 90) return 'on-track';
@@ -362,40 +612,39 @@ function getStatus(value, goal) {
 }
 function getStatusLabel(s) { return s === 'on-track' ? 'On Track' : s === 'close' ? 'Close' : 'Behind'; }
 function getStatusEmoji(s) { return s === 'on-track' ? '\u2705' : s === 'close' ? '\u26a0\ufe0f' : '\ud83d\udd34'; }
-function updateStatus(metric) {}
 
-// --- GENERATE ---
+// =============================================
+// GENERATE
+// =============================================
 function generate() {
   const rep = document.getElementById('repName').value.trim() || 'Rep';
   const manager = document.getElementById('managerName').value.trim() || 'Manager';
   const dateInput = document.getElementById('reviewDate').value;
   let period = 'this week';
   if (dateInput) {
-    const selected = new Date(dateInput + 'T12:00:00');
-    const monday = getMondayOfWeek(selected);
-    const sunday = getSundayOfWeek(selected);
-    period = `Week of ${formatDateMDY(monday)}`;
+    const sel = new Date(dateInput + 'T12:00:00');
+    period = 'Week of ' + formatDateMDY(getMondayOfWeek(sel));
   }
   const g = goals[repType];
 
   const vals = {
-    mrr: document.getElementById('valMRR').value.trim() || 'N/A',
-    asp: document.getElementById('valASP').value.trim() || 'N/A',
-    attach: document.getElementById('valAttach').value.trim() || 'N/A',
-    onCallTTP: document.getElementById('valOnCallTTP').value.trim() || 'N/A',
+    mrr:        document.getElementById('valMRR').value.trim() || 'N/A',
+    asp:        document.getElementById('valASP').value.trim() || 'N/A',
+    attach:     document.getElementById('valAttach').value.trim() || 'N/A',
+    onCallTTP:  document.getElementById('valOnCallTTP').value.trim() || 'N/A',
     overallTTP: document.getElementById('valOverallTTP').value.trim() || 'N/A',
-    weekly: document.getElementById('valWeekly').value.trim() || 'N/A',
-    ftko: document.getElementById('valFTKO').value.trim() || 'N/A'
+    weekly:     document.getElementById('valWeekly').value.trim() || 'N/A',
+    ftko:       document.getElementById('valFTKO').value.trim() || 'N/A'
   };
 
   const statuses = {
-    mrr: getStatus(parseNum(vals.mrr), g.mrr),
-    asp: getStatus(parseNum(vals.asp), g.asp),
-    attach: getStatus(parseNum(vals.attach), g.attach),
-    onCallTTP: getStatus(parseNum(vals.onCallTTP), g.ttp),
+    mrr:        getStatus(parseNum(vals.mrr), g.mrr),
+    asp:        getStatus(parseNum(vals.asp), g.asp),
+    attach:     getStatus(parseNum(vals.attach), g.attach),
+    onCallTTP:  getStatus(parseNum(vals.onCallTTP), g.ttp),
     overallTTP: getStatus(parseNum(vals.overallTTP), g.ttp),
-    weekly: getStatus(parseNum(vals.weekly), g.weeklyRev),
-    ftko: getStatus(parseNum(vals.ftko), g.ftko)
+    weekly:     getStatus(parseNum(vals.weekly), g.weeklyRev),
+    ftko:       getStatus(parseNum(vals.ftko), g.ftko)
   };
 
   const hasBehind = Object.values(statuses).some(s => s === 'behind');
@@ -404,150 +653,47 @@ function generate() {
   const behindMetrics = Object.entries(statuses).filter(([k,s]) => s==='behind').map(([k]) => metricLabels[k]);
   const onTrackMetrics = Object.entries(statuses).filter(([k,s]) => s==='on-track').map(([k]) => metricLabels[k]);
 
-  // Build badges
-  const badgeRow = document.getElementById('badgeRow');
-  badgeRow.innerHTML = Object.entries(statuses).map(([k,s]) =>
-    `<div class="badge badge-${s}"><div class="badge-dot" style="background:${s==='on-track'?'#22c55e':s==='close'?'#f59e0b':'#ef4444'}"></div>${metricLabels[k]}: ${vals[k]}</div>`
+  // Badges
+  document.getElementById('badgeRow').innerHTML = Object.entries(statuses).map(([k,s]) =>
+    '<div class="badge badge-' + s + '"><div class="badge-dot" style="background:' + (s==='on-track'?'#22c55e':s==='close'?'#f59e0b':'#ef4444') + '"></div>' + metricLabels[k] + ': ' + vals[k] + '</div>'
   ).join('');
-  document.getElementById('summaryRepName').textContent = rep + ' - ' + period;
-  // Gather notes
-  const discussionPoints = document.getElementById('discussionPoints').value.trim();
-  const committedActions = document.getElementById('committedActions').value.trim();
-  const coachingFocus = document.getElementById('coachingFocus').value.trim();
-  const zoomTranscript = document.getElementById('zoomTranscript').value.trim();
-  const hasManagerNotes = discussionPoints || committedActions;
-  const hasTranscript = zoomTranscript.length > 50;
+  document.getElementById('summaryRepName').textContent = rep + ' — ' + period;
 
-  // Build notes section for outputs
+  // Notes
+  const discussion = document.getElementById('discussionPoints').value.trim();
+  const actions = document.getElementById('committedActions').value.trim();
+  const liveTranscript = finalTranscript.trim();
+
   let notesForGuide = '';
   let notesForEmail = '';
-  if (hasManagerNotes) {
-    notesForGuide += '\nCALL NOTES FROM THIS SESSION\n';
-    notesForGuide += '------------------------------------\n';
-    if (discussionPoints) notesForGuide += `Discussion Points:\n${discussionPoints}\n`;
-    if (committedActions) notesForGuide += `\nCommitted Actions (captured during call):\n${committedActions}\n`;
-    notesForEmail += '\n------------------------------------\nWHAT WE DISCUSSED\n------------------------------------\n';
-    if (discussionPoints) notesForEmail += `${discussionPoints}\n`;
-  } else if (hasTranscript) {
-    const excerpt = zoomTranscript.length > 800 ? zoomTranscript.substring(0, 800) + '...\n[Full transcript available - excerpt shown]\n' : zoomTranscript + '\n';
-    notesForGuide += '\nTRANSCRIPT / SESSION NOTES\n';
-    notesForGuide += '------------------------------------\n';
-    notesForGuide += excerpt;
-    notesForEmail += '\n------------------------------------\nCALL SUMMARY\n------------------------------------\n';
-    notesForEmail += excerpt;
+
+  if (discussion || actions) {
+    notesForGuide = '\nCALL NOTES\n------------------------------------\n';
+    if (discussion) notesForGuide += discussion + '\n';
+    notesForEmail = '\n------------------------------------\nWHAT WE DISCUSSED\n------------------------------------\n';
+    if (discussion) notesForEmail += discussion + '\n';
+  } else if (liveTranscript.length > 30) {
+    const excerpt = liveTranscript.length > 600 ? liveTranscript.substring(0,600) + '...\n' : liveTranscript + '\n';
+    notesForGuide = '\nSESSION TRANSCRIPT (excerpt)\n------------------------------------\n' + excerpt;
+    notesForEmail = '\n------------------------------------\nCALL SUMMARY\n------------------------------------\n' + excerpt;
   }
 
-  // COMMITTED ACTIONS BLOCK for email
-  let emailActionsBlock = '';
-  if (committedActions) {
-    emailActionsBlock = `\n------------------------------------\nCOMMITTED ACTIONS\n------------------------------------\n${committedActions}\n`;
-  } else {
-    emailActionsBlock = `\n------------------------------------\nCOMMITTED ACTION PLAN\n------------------------------------\nAs discussed, you committed to the following before our next review:\n\n1. ________________________________________\n2. ________________________________________\n3. ________________________________________\n\nTarget completion: ________________________\n`;
-  }
+  const emailActionsBlock = actions
+    ? '\n------------------------------------\nCOMMITTED ACTIONS\n------------------------------------\n' + actions + '\n'
+    : '\n------------------------------------\nCOMMITTED ACTION PLAN\n------------------------------------\nAs discussed, you committed to the following before our next review:\n\n1. ________________________________________\n2. ________________________________________\n3. ________________________________________\n\nTarget completion: ________________________\n';
 
-  const guide = `TEX 1:1 CONVERSATION GUIDE
-Rep: ${rep} - ${repType === 'delta' ? 'Delta' : 'Non-Delta'}
-Period: ${period}
-Manager: ${manager}
-====================================
+  const guide = 'TEX 1:1 CONVERSATION GUIDE\nRep: ' + rep + ' - ' + (repType==='delta'?'Delta':'Non-Delta') + '\nPeriod: ' + period + '\nManager: ' + manager + '\n====================================\n\nSTEP 1 - OPEN THE AGENDA (1-2 min)\n------------------------------------\n"Hey ' + rep + ', today we are walking through your metrics for ' + period + ', understanding where you stand against your weekly goals, and aligning on a clear path forward."\n\nStart the TEX Transcription App recording now.\n\n\nSTEP 2 - WEEKLY METRICS REVIEW\n------------------------------------\n\nMRR - Monthly Recurring Revenue\nResult: ' + vals.mrr + ' | Goal: $' + g.mrr.toLocaleString() + ' ' + getStatusEmoji(statuses.mrr) + '\n"Your MRR is ' + vals.mrr + ' against the $' + g.mrr.toLocaleString() + ' monthly target. ' + (statuses.mrr==='on-track'?'Strong number. What has been driving this?':statuses.mrr==='close'?'You are close - what would push you over the line before month end?':'You are behind. Walk me through what happened and what the recovery plan looks like.') + '"\n\nASP - Average Selling Price\nResult: ' + vals.asp + ' | Goal: $' + g.asp + ' ' + getStatusEmoji(statuses.asp) + '\n"ASP is ' + vals.asp + ' vs $' + g.asp + '. ' + (statuses.asp==='behind'?'Deals are being discounted. Where in the call are you losing pricing confidence?':statuses.asp==='close'?'Almost there. Are you presenting the full value stack before naming the price?':'Holding price well. Keep presenting full value before the number.') + '"\n\nAttachment Rate\nResult: ' + vals.attach + ' | Goal: 45% ' + getStatusEmoji(statuses.attach) + '\n"Attachment is ' + vals.attach + ' vs 45%. ' + (statuses.attach==='behind'?'At what point in your calls is the attachment offer happening? Let us pull a couple transcripts from the TEX app.':statuses.attach==='close'?'Getting there. Are you making the offer on every call?':'Great attachment. You are making the offer consistently.') + '"\n\nOn-Call TTP\nResult: ' + vals.onCallTTP + ' | Goal: 65% ' + getStatusEmoji(statuses.onCallTTP) + '\n"On-call TTP this week is ' + vals.onCallTTP + '. ' + (statuses.onCallTTP==='behind'?'This is where the TEX transcription data is most valuable. Let us look at 2-3 unconverted calls.':statuses.onCallTTP==='close'?'Close. Identify the 1-2 call scenarios consistently not converting.':'Strong conversion. Make sure call volume supports maintaining this.') + '"\n\nOverall TTP\nResult: ' + vals.overallTTP + ' | Goal: 65% ' + getStatusEmoji(statuses.overallTTP) + '\n"Overall TTP is ' + vals.overallTTP + '. Compare to on-call TTP of ' + vals.onCallTTP + '. ' + (parseNum(vals.overallTTP)<parseNum(vals.onCallTTP)?'The gap shows you close well live but are not converting async follow-ups. What does your follow-up process look like?':'Good alignment between on-call and overall. Keep that consistency.') + '"\n\nWeekly Revenue\nResult: ' + vals.weekly + ' | Goal: $' + g.weeklyRev.toLocaleString() + '/wk ' + getStatusEmoji(statuses.weekly) + '\n"Weekly revenue is ' + vals.weekly + ' vs $' + g.weeklyRev.toLocaleString() + '/week. ' + (statuses.weekly==='behind'?'At this pace the MRR goal is at risk. What is eating into your productive hours?':'Good weekly output. Consistency here drives the monthly number.') + '"\n\nFTKO - Weekly Kick-offs\nResult: ' + vals.ftko + ' | Goal: ' + g.ftko + '/wk ' + getStatusEmoji(statuses.ftko) + '\n"FTKO is ' + vals.ftko + ' vs ' + g.ftko + '/week. ' + (statuses.ftko==='behind'?'Fewer kick-offs means fewer conversion opportunities. What is blocking you from hitting ' + g.ftko + ' per week?':'Good call volume. Make sure the quality matches - the TTP numbers tell us that story.') + '"\n' + notesForGuide + '\nSTEP 3 - PROGRESS ASSESSMENT\n------------------------------------\n' + (hasBehind?'BEHIND ON: ' + behindMetrics.join(', ') + '\n- Ask why they believe they are behind on each\n- Have them outline a concrete recovery plan with dates\n- State these are minimum weekly expectations\n- Document committed actions before ending the call':allOnTrack?'ALL METRICS ON TRACK\n- Ask how they are achieving their goals\n- Identify what can be shared with the team\n- Encourage maintaining pace toward stretch goals':'MIXED PERFORMANCE\n- Recognize what is working: ' + onTrackMetrics.join(', ') + '\n- Focus improvement energy on: ' + behindMetrics.join(', ') + '\n- Get specific commitments on the gaps') + '\n\n\nSTEP 4 - CLOSE WITH COMMITMENTS (2-3 min)\n------------------------------------\n"Based on what we discussed, I need you to commit to [specific actions]. I will send a written recap after this call."\n\n' + (actions?'Committed Actions:\n' + actions:'Committed Actions:\n[ ] ________________________________________\n[ ] ________________________________________\n[ ] ________________________________________') + '\n\nNext 1:1: ___________________________________';
 
-STEP 1 - OPEN THE AGENDA (1-2 min)
-------------------------------------
-"Hey ${rep}, today we are walking through your metrics for ${period}, understanding where you stand against your weekly goals, and aligning on a clear path forward. Have your numbers ready."
-
-Start the TEX Transcription App recording now.
-
-
-STEP 2 - WEEKLY METRICS REVIEW
-------------------------------------
-
-MRR - Monthly Recurring Revenue
-Result: ${vals.mrr} | Goal: $${g.mrr.toLocaleString()} ${getStatusEmoji(statuses.mrr)}
-"Your MRR is ${vals.mrr} against the $${g.mrr.toLocaleString()} monthly target. ${statuses.mrr === 'on-track' ? 'Strong number. What has been driving this?' : statuses.mrr === 'close' ? 'You are close - what would push you over the line before month end?' : 'You are behind. Walk me through what happened this week and what the recovery plan looks like.'}"
-
-ASP - Average Selling Price
-Result: ${vals.asp} | Goal: $${g.asp} ${getStatusEmoji(statuses.asp)}
-"ASP is ${vals.asp} vs the $${g.asp} target. ${statuses.asp === 'behind' ? 'Deals are being discounted. Where in the call are you losing pricing confidence - before or after the objection?' : statuses.asp === 'close' ? 'Almost there. Are you presenting the full value stack before naming the price on every call?' : 'Holding price well. Keep presenting full value before the number.'}"
-
-Attachment Rate
-Result: ${vals.attach} | Goal: 45% ${getStatusEmoji(statuses.attach)}
-"Attachment is ${vals.attach} vs 45% for the week. ${statuses.attach === 'behind' ? 'At what point in your calls is the attachment offer happening? Let us pull a couple transcripts from the TEX app and find where it breaks down.' : statuses.attach === 'close' ? 'Getting there. Are you making the offer on every call consistently?' : 'Great attachment. The data shows you are making the offer consistently.'}"
-
-On-Call TTP
-Result: ${vals.onCallTTP} | Goal: 65% ${getStatusEmoji(statuses.onCallTTP)}
-"On-call TTP this week is ${vals.onCallTTP}. ${statuses.onCallTTP === 'behind' ? 'This is where TEX transcription data is most valuable. Let us look at 2-3 unconverted calls and find the common objection pattern.' : statuses.onCallTTP === 'close' ? 'Close. Identify the 1-2 call scenarios consistently not converting.' : 'Strong conversion. Make sure call volume supports maintaining this.'}"
-
-Overall TTP
-Result: ${vals.overallTTP} | Goal: 65% ${getStatusEmoji(statuses.overallTTP)}
-"Overall TTP is ${vals.overallTTP}. Compare to on-call TTP of ${vals.onCallTTP}. ${parseNum(vals.overallTTP) < parseNum(vals.onCallTTP) ? 'The gap shows you close well live but are not converting async follow-ups. What does your follow-up process look like?' : 'Good alignment between on-call and overall. Keep that consistency.'}"
-
-Weekly Revenue
-Result: ${vals.weekly} | Goal: $${g.weeklyRev.toLocaleString()}/wk ${getStatusEmoji(statuses.weekly)}
-"Weekly revenue output is ${vals.weekly} vs the $${g.weeklyRev.toLocaleString()} weekly target. ${statuses.weekly === 'behind' ? 'At this pace the MRR goal is at risk. What does a typical day look like for you - what is eating into productive hours?' : 'Good weekly output. Consistency here is what drives the monthly number.'}"
-
-FTKO - Weekly Kick-offs
-Result: ${vals.ftko} | Goal: ${g.ftko}/wk ${getStatusEmoji(statuses.ftko)}
-"FTKO this week is ${vals.ftko} vs the ${g.ftko}/week goal. ${statuses.ftko === 'behind' ? 'Fewer kick-offs means fewer conversion opportunities. What is blocking you from hitting ${g.ftko} per week?' : 'Good call volume. Make sure the quality matches - the TTP numbers tell us that story.'}"
-${notesForGuide}
-
-STEP 3 - PROGRESS ASSESSMENT
-------------------------------------
-${hasBehind ? `BEHIND ON: ${behindMetrics.join(', ')}
-- Ask why they believe they are behind on each
-- Have them outline a concrete recovery plan with dates
-- State clearly that these metrics are minimum weekly expectations
-- Document committed actions before ending the call
-- Remind them the TEX recording captures all commitments made today` : allOnTrack ? `ALL METRICS ON TRACK - Great 1:1!
-- Ask how they are achieving their goals
-- Identify what is working that can be shared with the team
-- Encourage maintaining pace toward stretch goals` : `MIXED PERFORMANCE
-- Recognize what is working: ${onTrackMetrics.join(', ')}
-- Focus improvement energy on: ${behindMetrics.join(', ')}
-- Get specific commitments on the gaps`}
-
-
-STEP 4 - CLOSE WITH COMMITMENTS (2-3 min)
-------------------------------------
-"Based on what we discussed, I need you to commit to [specific actions]. I will send a written recap after this call. Stop the TEX recording now."
-
-${committedActions ? 'Committed Actions (captured during call):\n' + committedActions : 'Committed Actions to document:\n[ ] ________________________________________\n[ ] ________________________________________\n[ ] ________________________________________'}
-
-Next 1:1: ___________________________________`;
-
-  const email = `SUBJECT: 1:1 Performance Recap - ${rep} - ${period}
-
-Hi ${rep},
-
-Here is a written recap of our 1:1 today covering your performance metrics for ${period}.
-
-------------------------------------
-WEEKLY PERFORMANCE STANDING
-------------------------------------
-MRR: ${vals.mrr} (Goal: $${g.mrr.toLocaleString()}) ${getStatusEmoji(statuses.mrr)} ${getStatusLabel(statuses.mrr)}
-ASP: ${vals.asp} (Goal: $${g.asp}) ${getStatusEmoji(statuses.asp)} ${getStatusLabel(statuses.asp)}
-Attachment Rate: ${vals.attach} (Goal: 45%) ${getStatusEmoji(statuses.attach)} ${getStatusLabel(statuses.attach)}
-On-Call TTP: ${vals.onCallTTP} (Goal: 65%) ${getStatusEmoji(statuses.onCallTTP)} ${getStatusLabel(statuses.onCallTTP)}
-Overall TTP: ${vals.overallTTP} (Goal: 65%) ${getStatusEmoji(statuses.overallTTP)} ${getStatusLabel(statuses.overallTTP)}
-Weekly Revenue: ${vals.weekly} (Goal: $${g.weeklyRev.toLocaleString()}/wk) ${getStatusEmoji(statuses.weekly)} ${getStatusLabel(statuses.weekly)}
-FTKO: ${vals.ftko} (Goal: ${g.ftko}/wk) ${getStatusEmoji(statuses.ftko)} ${getStatusLabel(statuses.ftko)}
-${notesForEmail}${emailActionsBlock}
-------------------------------------
-EXPECTATIONS & NEXT STEPS
-------------------------------------
-${hasBehind ? `You are currently behind on ${behindMetrics.join(', ')}. I expect measurable improvement in these areas by our next 1:1. Continued underperformance against these minimums may result in a formal performance improvement plan.
-
-I have confidence in your ability to turn this around and I am here to support you.` : `You are tracking well against your weekly goals. Keep the momentum going. Our focus for the next week is to maintain consistency and push toward stretch targets.`}
-
-Please reply confirming you have received and understood this recap.
-
-Looking forward to your progress,
-${manager}`;
+  const email = 'SUBJECT: 1:1 Performance Recap - ' + rep + ' - ' + period + '\n\nHi ' + rep + ',\n\nHere is a written recap of our 1:1 today covering your performance metrics for ' + period + '.\n\n------------------------------------\nWEEKLY PERFORMANCE STANDING\n------------------------------------\nMRR: ' + vals.mrr + ' (Goal: $' + g.mrr.toLocaleString() + ') ' + getStatusEmoji(statuses.mrr) + ' ' + getStatusLabel(statuses.mrr) + '\nASP: ' + vals.asp + ' (Goal: $' + g.asp + ') ' + getStatusEmoji(statuses.asp) + ' ' + getStatusLabel(statuses.asp) + '\nAttachment Rate: ' + vals.attach + ' (Goal: 45%) ' + getStatusEmoji(statuses.attach) + ' ' + getStatusLabel(statuses.attach) + '\nOn-Call TTP: ' + vals.onCallTTP + ' (Goal: 65%) ' + getStatusEmoji(statuses.onCallTTP) + ' ' + getStatusLabel(statuses.onCallTTP) + '\nOverall TTP: ' + vals.overallTTP + ' (Goal: 65%) ' + getStatusEmoji(statuses.overallTTP) + ' ' + getStatusLabel(statuses.overallTTP) + '\nWeekly Revenue: ' + vals.weekly + ' (Goal: $' + g.weeklyRev.toLocaleString() + '/wk) ' + getStatusEmoji(statuses.weekly) + ' ' + getStatusLabel(statuses.weekly) + '\nFTKO: ' + vals.ftko + ' (Goal: ' + g.ftko + '/wk) ' + getStatusEmoji(statuses.ftko) + ' ' + getStatusLabel(statuses.ftko) + notesForEmail + emailActionsBlock + '\n------------------------------------\nEXPECTATIONS & NEXT STEPS\n------------------------------------\n' + (hasBehind?'You are currently behind on ' + behindMetrics.join(', ') + '. I expect measurable improvement in these areas by our next 1:1. Continued underperformance against these minimums may result in a formal performance improvement plan.\n\nI have confidence in your ability to turn this around and I am here to support you.':'You are tracking well against your weekly goals. Keep the momentum going. Our focus for the next week is to maintain consistency and push toward stretch targets.') + '\n\nPlease reply confirming you have received and understood this recap.\n\nLooking forward to your progress,\n' + manager;
 
   document.getElementById('guideOutput').textContent = guide;
   document.getElementById('emailOutput').textContent = email;
   goToStep(4);
 }
 
+// =============================================
+// COPY + RESET
+// =============================================
 async function copyText(id, btnId, label) {
   const text = document.getElementById(id).textContent;
   try {
@@ -566,12 +712,21 @@ async function copyText(id, btnId, label) {
 }
 
 function startOver() {
-  document.getElementById('repName').value = '';
-  document.getElementById('managerName').value = '';
-  document.getElementById('discussionPoints').value = '';
-  document.getElementById('committedActions').value = '';
-  document.getElementById('coachingFocus').value = '';
-  document.getElementById('zoomTranscript').value = '';
+  finalTranscript = '';
+  isListening = false;
+  if (recognition) { try { recognition.stop(); } catch(e) {} }
+  document.getElementById('transcriptBox').innerHTML = '<span class="transcript-placeholder">Transcript will appear here as you speak during the call...</span>';
+  document.getElementById('recordDot').classList.remove('listening');
+  document.getElementById('recordStatusText').textContent = 'Ready';
+  document.getElementById('btnStartRec').disabled = false;
+  document.getElementById('btnStopRec').disabled = true;
+  document.getElementById('btnAiExtract').disabled = true;
+  document.getElementById('groqStatus').innerHTML = '';
+  document.getElementById('extractedBanner').style.display = 'none';
+  ['repName','managerName','discussionPoints','committedActions','coachingFocus','zoomTranscript'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
   ['MRR','ASP','Attach','OnCallTTP','OverallTTP','Weekly','FTKO'].forEach(m => {
     const el = document.getElementById('val' + m);
     if (el) el.value = '';
@@ -580,8 +735,18 @@ function startOver() {
   goToStep(1);
 }
 
-// Initialize on load
-document.addEventListener('DOMContentLoaded', initDatePicker);
+// =============================================
+// INIT
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  initDatePicker();
+  loadGroqKey();
+  if (!isSpeechSupported()) {
+    document.getElementById('recordStatusText').textContent = 'Not supported in this browser (use Chrome/Edge)';
+    document.getElementById('btnStartRec').disabled = true;
+    document.getElementById('btnStartRec').style.opacity = '0.4';
+  }
+});
 </script>
 </body>
 </html>
