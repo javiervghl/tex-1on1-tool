@@ -6,99 +6,75 @@
 <title>TEX 1:1 Performance Tool</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f0; min-height: 100vh; }
-  .app { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
-  .header { text-align: center; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(56,189,248,0.15); }
-  .header h1 { font-size: 26px; font-weight: 800; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase; }
-  .header p { margin-top: 8px; color: #94a3b8; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; }
-
-  /* STEP INDICATOR */
-  .steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px; }
-  .step-item { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-  .step-num { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #1e293b; background: #1e293b; color: #475569; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-  .step-item.active .step-num { border-color: #38bdf8; background: #38bdf8; color: #0a0e1a; }
-  .step-item.done .step-num { border-color: #38bdf8; background: transparent; color: #38bdf8; }
-  .step-label { font-size: 12px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s; }
-  .step-item.active .step-label { color: #38bdf8; }
-  .step-item.done .step-label { color: #64748b; }
-  .step-line { width: 48px; height: 1px; background: #1e293b; margin: 0 4px; }
-  .step-line.done { background: #38bdf8; }
-
-  /* CARD */
-  .card { background: #0f172a; border: 1px solid rgba(56,189,248,0.12); border-radius: 16px; padding: 32px; margin-bottom: 24px; }
-  .card-title { font-size: 13px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
-  .card-title::before { content: ''; display: inline-block; width: 3px; height: 16px; background: #38bdf8; border-radius: 2px; }
-
-  /* FORM ELEMENTS */
-  .field { margin-bottom: 20px; }
-  .field label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-  .field input[type="text"], .field input[type="number"] {
-    width: 100%; background: #1e293b; border: 1px solid rgba(56,189,248,0.15); border-radius: 8px;
-    padding: 12px 16px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500;
-    color: #e2e8f0; outline: none; transition: border-color 0.2s;
-  }
-  .field input:focus { border-color: #38bdf8; }
-  .field .goal-hint { font-size: 11px; color: #475569; margin-top: 6px; font-weight: 500; }
-
-  /* TOGGLE */
-  .toggle-group { display: flex; background: #1e293b; border-radius: 8px; padding: 4px; gap: 4px; }
-  .toggle-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif;
-    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: transparent; color: #64748b; }
-  .toggle-btn.active { background: #38bdf8; color: #0a0e1a; }
-
-  /* METRIC GRID */
-  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 600px) { .metric-grid { grid-template-columns: 1fr; } }
-
-  .metric-card { background: #1a2540; border: 1px solid rgba(56,189,248,0.1); border-radius: 10px; padding: 16px; }
-  .metric-card .metric-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .metric-card .metric-name { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-  .metric-card .metric-goal { font-size: 11px; font-weight: 600; color: #38bdf8; background: rgba(56,189,248,0.08); padding: 2px 8px; border-radius: 20px; }
-  .metric-card input { width: 100%; background: #0f172a; border: 1px solid rgba(56,189,248,0.15); border-radius: 6px;
-    padding: 10px 12px; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: #e2e8f0; outline: none; }
-  .metric-card input:focus { border-color: #38bdf8; }
-  .metric-card .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; display: inline-block; margin-left: 6px; transition: background 0.3s; }
-  .status-behind { background: #ef4444 !important; }
-  .status-on-track { background: #22c55e !important; }
-  .status-close { background: #f59e0b !important; }
-
-  /* BUTTONS */
-  .btn { padding: 14px 32px; border: none; border-radius: 8px; font-family: 'Montserrat', sans-serif;
-    font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
-  .btn-primary { background: #38bdf8; color: #0a0e1a; }
-  .btn-primary:hover { background: #7dd3fc; }
-  .btn-secondary { background: transparent; border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; }
-  .btn-secondary:hover { border-color: #38bdf8; background: rgba(56,189,248,0.05); }
-  .btn-copy { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2); color: #38bdf8;
-    padding: 8px 16px; font-size: 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-  .btn-copy:hover { background: rgba(56,189,248,0.2); }
-  .btn-copy.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: #22c55e; }
-
-  .btn-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px; }
-  .btn-row-between { display: flex; gap: 12px; justify-content: space-between; margin-top: 28px; }
-
-  /* OUTPUT SECTIONS */
-  .output-section { margin-bottom: 28px; }
-  .output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .output-label { font-size: 12px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
-  .output-box { background: #1e293b; border: 1px solid rgba(56,189,248,0.12); border-radius: 10px; padding: 20px;
-    font-size: 13px; line-height: 1.8; color: #cbd5e1; white-space: pre-wrap; word-break: break-word; }
-
-  /* METRIC BADGE ROW */
-  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-  .badge-behind { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #f87171; }
-  .badge-on-track { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; }
-  .badge-close { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); color: #fbbf24; }
-  .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
-
-  /* HIDDEN */
-  .view { display: none; }
-  .view.active { display: block; }
-
-  /* SECTION DIVIDER */
-  .section-divider { border: none; border-top: 1px solid rgba(56,189,248,0.08); margin: 24px 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f0; min-height: 100vh; }
+.app { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+.header { text-align: center; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid rgba(56,189,248,0.15); }
+.header h1 { font-size: 26px; font-weight: 800; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase; }
+.header p { margin-top: 8px; color: #94a3b8; font-size: 13px; font-weight: 500; letter-spacing: 0.5px; }
+.steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 40px; }
+.step-item { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.step-num { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #1e293b; background: #1e293b; color: #475569; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.step-item.active .step-num { border-color: #38bdf8; background: #38bdf8; color: #0a0e1a; }
+.step-item.done .step-num { border-color: #38bdf8; background: transparent; color: #38bdf8; }
+.step-label { font-size: 12px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; transition: color 0.2s; }
+.step-item.active .step-label { color: #38bdf8; }
+.step-item.done .step-label { color: #64748b; }
+.step-line { width: 48px; height: 1px; background: #1e293b; margin: 0 4px; }
+.step-line.done { background: #38bdf8; }
+.card { background: #0f172a; border: 1px solid rgba(56,189,248,0.12); border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+.card-title { font-size: 13px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+.card-title::before { content: ''; display: inline-block; width: 3px; height: 16px; background: #38bdf8; border-radius: 2px; }
+.field { margin-bottom: 20px; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.field input[type="text"], .field input[type="number"], .field input[type="date"] { width: 100%; background: #1e293b; border: 1px solid rgba(56,189,248,0.15); border-radius: 8px; padding: 12px 16px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 500; color: #e2e8f0; outline: none; transition: border-color 0.2s; }
+.field input[type="date"] { color-scheme: dark; }
+.field input:focus { border-color: #38bdf8; }
+.field .goal-hint { font-size: 11px; color: #475569; margin-top: 6px; font-weight: 500; }
+.week-display { font-size: 12px; color: #38bdf8; margin-top: 6px; font-weight: 600; }
+.toggle-group { display: flex; background: #1e293b; border-radius: 8px; padding: 4px; gap: 4px; }
+.toggle-btn { flex: 1; padding: 10px; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: transparent; color: #64748b; }
+.toggle-btn.active { background: #38bdf8; color: #0a0e1a; }
+.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 600px) { .metric-grid { grid-template-columns: 1fr; } }
+.metric-card { background: #1a2540; border: 1px solid rgba(56,189,248,0.1); border-radius: 10px; padding: 16px; }
+.metric-card .metric-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.metric-card .metric-name { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+.metric-card .metric-goal { font-size: 11px; font-weight: 600; color: #38bdf8; background: rgba(56,189,248,0.08); padding: 2px 8px; border-radius: 20px; }
+.metric-card input { width: 100%; background: #0f172a; border: 1px solid rgba(56,189,248,0.15); border-radius: 6px; padding: 10px 12px; font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: #e2e8f0; outline: none; }
+.metric-card input:focus { border-color: #38bdf8; }
+.metric-hint { font-size: 11px; color: #475569; margin-top: 6px; }
+.btn { padding: 14px 32px; border: none; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
+.btn-primary { background: #38bdf8; color: #0a0e1a; }
+.btn-primary:hover { background: #7dd3fc; }
+.btn-secondary { background: transparent; border: 1px solid rgba(56,189,248,0.3); color: #38bdf8; }
+.btn-secondary:hover { border-color: #38bdf8; background: rgba(56,189,248,0.05); }
+.btn-copy { background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2); color: #38bdf8; padding: 8px 16px; font-size: 12px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.btn-copy:hover { background: rgba(56,189,248,0.2); }
+.btn-copy.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: #22c55e; }
+.btn-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px; }
+.btn-row-between { display: flex; gap: 12px; justify-content: space-between; margin-top: 28px; }
+.output-section { margin-bottom: 28px; }
+.output-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.output-label { font-size: 12px; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
+.output-box { background: #1e293b; border: 1px solid rgba(56,189,248,0.12); border-radius: 10px; padding: 20px; font-size: 13px; line-height: 1.8; color: #cbd5e1; white-space: pre-wrap; word-break: break-word; }
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.badge { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.badge-behind { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #f87171; }
+.badge-on-track { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; }
+.badge-close { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); color: #fbbf24; }
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+.view { display: none; }
+.view.active { display: block; }
+.section-divider { border: none; border-top: 1px solid rgba(56,189,248,0.08); margin: 24px 0; }
+.notes-area { width: 100%; background: #1e293b; border: 1px solid rgba(56,189,248,0.15); border-radius: 8px; padding: 14px 16px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 400; color: #e2e8f0; outline: none; resize: vertical; min-height: 160px; line-height: 1.7; transition: border-color 0.2s; }
+.notes-area:focus { border-color: #38bdf8; }
+.notes-area::placeholder { color: #475569; }
+.notes-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+.notes-tab { padding: 7px 16px; border: 1px solid rgba(56,189,248,0.15); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; background: transparent; color: #64748b; transition: all 0.2s; }
+.notes-tab.active { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.4); color: #38bdf8; }
+.notes-tab:hover { border-color: rgba(56,189,248,0.3); color: #94a3b8; }
+.info-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.12); font-size: 11px; color: #64748b; font-weight: 500; margin-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -107,16 +83,16 @@
     <h1>TEX 1:1 Performance Tool</h1>
     <p>Manager toolkit - Generate your 1:1 conversation guide and follow-up email in seconds</p>
   </div>
-
   <!-- STEP INDICATOR -->
   <div class="steps" id="stepIndicator">
     <div class="step-item active" id="si1"><div class="step-num">1</div><div class="step-label">Rep Info</div></div>
     <div class="step-line" id="sl1"></div>
     <div class="step-item" id="si2"><div class="step-num">2</div><div class="step-label">Metrics</div></div>
     <div class="step-line" id="sl2"></div>
-    <div class="step-item" id="si3"><div class="step-num">3</div><div class="step-label">Results</div></div>
+    <div class="step-item" id="si3"><div class="step-num">3</div><div class="step-label">Call Notes</div></div>
+    <div class="step-line" id="sl3"></div>
+    <div class="step-item" id="si4"><div class="step-num">4</div><div class="step-label">Results</div></div>
   </div>
-
   <!-- VIEW 1: REP INFO -->
   <div class="view active" id="view1">
     <div class="card">
@@ -135,22 +111,23 @@
           <button class="toggle-btn active" id="btnNonDelta" onclick="setRepType('non-delta')">Non-Delta</button>
           <button class="toggle-btn" id="btnDelta" onclick="setRepType('delta')">Delta</button>
         </div>
-        <div class="goal-hint" id="repTypeHint">Goals: MRR $12,000 - ASP $135 - TTP 65% - Daily $571 - FTKO 8/day</div>
+        <div class="goal-hint" id="repTypeHint">Weekly Goals: MRR $12,000 &bull; ASP $135 &bull; TTP 65% &bull; Weekly Revenue $2,855 &bull; FTKO 40/week</div>
       </div>
       <div class="field">
-        <label>Review Period</label>
-        <input type="text" id="reviewPeriod" placeholder="e.g. Week of May 12, 2026" />
+        <label>Review Week</label>
+        <input type="date" id="reviewDate" onchange="updateWeekDisplay()" />
+        <div class="week-display" id="weekDisplay"></div>
       </div>
       <div class="btn-row">
         <button class="btn btn-primary" onclick="goToStep(2)">Next: Enter Metrics &rarr;</button>
       </div>
     </div>
   </div>
-
   <!-- VIEW 2: METRICS -->
   <div class="view" id="view2">
     <div class="card">
-      <div class="card-title">Metric Inputs</div>
+      <div class="card-title">Weekly Metric Inputs</div>
+      <div class="info-chip">&#128197; Enter actuals for the full week &mdash; goals are calculated for 5 working days</div>
       <div class="metric-grid">
         <div class="metric-card">
           <div class="metric-header">
@@ -158,7 +135,7 @@
             <span class="metric-goal" id="goalMRR">Goal: $12,000</span>
           </div>
           <input type="text" id="valMRR" placeholder="e.g. $9,450" oninput="updateStatus('MRR')" />
-          <div style="margin-top:6px; font-size:11px; color:#475569;">Monthly Recurring Revenue</div>
+          <div class="metric-hint">Monthly Recurring Revenue (monthly target)</div>
         </div>
         <div class="metric-card">
           <div class="metric-header">
@@ -166,7 +143,7 @@
             <span class="metric-goal" id="goalASP">Goal: $135</span>
           </div>
           <input type="text" id="valASP" placeholder="e.g. $128" oninput="updateStatus('ASP')" />
-          <div style="margin-top:6px; font-size:11px; color:#475569;">Average Selling Price</div>
+          <div class="metric-hint">Average Selling Price per deal</div>
         </div>
         <div class="metric-card">
           <div class="metric-header">
@@ -174,7 +151,7 @@
             <span class="metric-goal">Goal: 45%</span>
           </div>
           <input type="text" id="valAttach" placeholder="e.g. 38%" oninput="updateStatus('Attach')" />
-          <div style="margin-top:6px; font-size:11px; color:#475569;">Add-on attachment %</div>
+          <div class="metric-hint">Add-on attachment % for the week</div>
         </div>
         <div class="metric-card">
           <div class="metric-header">
@@ -182,7 +159,7 @@
             <span class="metric-goal">Goal: 65%</span>
           </div>
           <input type="text" id="valOnCallTTP" placeholder="e.g. 58%" oninput="updateStatus('OnCallTTP')" />
-          <div style="margin-top:6px; font-size:11px; color:#475569;">Trial-to-paid on live calls</div>
+          <div class="metric-hint">Trial-to-paid rate on live calls (week)</div>
         </div>
         <div class="metric-card">
           <div class="metric-header">
@@ -190,84 +167,166 @@
             <span class="metric-goal">Goal: 65%</span>
           </div>
           <input type="text" id="valOverallTTP" placeholder="e.g. 61%" oninput="updateStatus('OverallTTP')" />
-          <div style="margin-top:6px; font-size:11px; color:#475569;">Overall trial-to-paid rate</div>
+          <div class="metric-hint">Overall trial-to-paid rate for the week</div>
         </div>
         <div class="metric-card">
           <div class="metric-header">
-            <span class="metric-name">Daily Target</span>
-            <span class="metric-goal" id="goalDaily">Goal: $571/day</span>
+            <span class="metric-name">Weekly Revenue</span>
+            <span class="metric-goal" id="goalWeekly">Goal: $2,855/wk</span>
           </div>
-          <input type="text" id="valDaily" placeholder="e.g. $490" oninput="updateStatus('Daily')" />
-          <div style="margin-top:6px; font-size:11px; color:#475569;">Daily revenue output</div>
+          <input type="text" id="valWeekly" placeholder="e.g. $2,200" oninput="updateStatus('Weekly')" />
+          <div class="metric-hint">Total revenue output for the week</div>
         </div>
         <div class="metric-card">
           <div class="metric-header">
             <span class="metric-name">FTKO (Kick-offs)</span>
-            <span class="metric-goal">Goal: 8/day</span>
+            <span class="metric-goal" id="goalFTKO">Goal: 40/wk</span>
           </div>
-          <input type="text" id="valFTKO" placeholder="e.g. 6" oninput="updateStatus('FTKO')" />
-          <div style="margin-top:6px; font-size:11px; color:#475569;">First-touch kick-off calls/day</div>
+          <input type="text" id="valFTKO" placeholder="e.g. 28" oninput="updateStatus('FTKO')" />
+          <div class="metric-hint">First-touch kick-off calls for the week</div>
         </div>
       </div>
       <div class="btn-row-between">
         <button class="btn btn-secondary" onclick="goToStep(1)">&larr; Back</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Next: Call Notes &rarr;</button>
+      </div>
+    </div>
+  </div>
+  <!-- VIEW 3: CALL NOTES -->
+  <div class="view" id="view3">
+    <div class="card">
+      <div class="card-title">Call Notes &amp; Transcript</div>
+      <p style="font-size:13px;color:#64748b;margin-bottom:20px;line-height:1.6;">Add notes from your 1:1 call or paste a Zoom/TEX transcript. This will be included in the conversation guide and follow-up email to reflect what was actually discussed.</p>
+      <div class="notes-tabs">
+        <button class="notes-tab active" id="tabManagerNotes" onclick="switchNotesTab('manager')">&#9998; Manager Notes</button>
+        <button class="notes-tab" id="tabTranscript" onclick="switchNotesTab('transcript')">&#128196; Paste Transcript</button>
+      </div>
+      <!-- Manager Notes Panel -->
+      <div id="panelManagerNotes">
+        <div class="field">
+          <label>Key Discussion Points</label>
+          <textarea class="notes-area" id="discussionPoints" placeholder="What did you discuss on the call? Key themes, concerns raised by the rep, your observations...&#10;&#10;e.g. Rep mentioned struggling with objection handling on pricing. Discussed role-play exercise. Rep committed to reviewing 3 lost call transcripts in TEX app this week."></textarea>
+        </div>
+        <div class="field">
+          <label>Committed Actions (from the call)</label>
+          <textarea class="notes-area" id="committedActions" style="min-height:100px;" placeholder="List the specific actions the rep committed to on the call...&#10;&#10;e.g.&#10;1. Review 3 lost call transcripts by Wednesday&#10;2. Role-play pricing objection with manager on Thursday&#10;3. Hit 45 FTKOs this week (9/day)"></textarea>
+        </div>
+        <div class="field">
+          <label>Manager Observations / Coaching Focus</label>
+          <textarea class="notes-area" id="coachingFocus" style="min-height:90px;" placeholder="Private coaching notes or areas to monitor (not included in rep-facing email)..."></textarea>
+        </div>
+      </div>
+      <!-- Transcript Panel -->
+      <div id="panelTranscript" style="display:none;">
+        <div class="field">
+          <label>Zoom / TEX Transcript</label>
+          <textarea class="notes-area" id="zoomTranscript" style="min-height:220px;" placeholder="Paste your full Zoom or TEX Transcription App transcript here. Key committed actions and discussion themes will be pulled into the guide and email automatically..."></textarea>
+        </div>
+        <div class="info-chip" style="margin-top:4px;">&#128161; Tip: Export transcript from Zoom &rarr; Meeting Summary, or from TEX Transcription App. The full transcript will be summarized in context for the email.</div>
+      </div>
+      <div class="btn-row-between">
+        <button class="btn btn-secondary" onclick="goToStep(2)">&larr; Back to Metrics</button>
         <button class="btn btn-primary" onclick="generate()">Generate Guide + Email &rarr;</button>
       </div>
     </div>
   </div>
-
-  <!-- VIEW 3: RESULTS -->
-  <div class="view" id="view3">
-    <!-- Status Summary -->
+  <!-- VIEW 4: RESULTS -->
+  <div class="view" id="view4">
     <div class="card">
       <div class="card-title">Performance Summary - <span id="summaryRepName"></span></div>
       <div class="badge-row" id="badgeRow"></div>
     </div>
-
-    <!-- 1:1 Conversation Guide -->
     <div class="card">
       <div class="output-header">
         <div class="output-label">1:1 Conversation Guide</div>
-        <button class="btn-copy" id="copyGuide" onclick="copyText('guideOutput','copyGuide')">Copy Guide</button>
+        <button class="btn-copy" id="copyGuide" onclick="copyText('guideOutput','copyGuide','Copy Guide')">Copy Guide</button>
       </div>
       <div class="output-box" id="guideOutput"></div>
     </div>
-
-    <!-- Follow-up Email -->
     <div class="card">
       <div class="output-header">
         <div class="output-label">Follow-up Email</div>
-        <button class="btn-copy" id="copyEmail" onclick="copyText('emailOutput','copyEmail')">Copy Email</button>
+        <button class="btn-copy" id="copyEmail" onclick="copyText('emailOutput','copyEmail','Copy Email')">Copy Email</button>
       </div>
       <div class="output-box" id="emailOutput"></div>
     </div>
-
     <div class="btn-row-between">
-      <button class="btn btn-secondary" onclick="goToStep(2)">&larr; Edit Metrics</button>
+      <button class="btn btn-secondary" onclick="goToStep(3)">&larr; Edit Notes</button>
       <button class="btn btn-secondary" onclick="startOver()">Start New 1:1</button>
     </div>
   </div>
-
 </div>
-
 <script>
 let repType = 'non-delta';
 const goals = {
-  'non-delta': { mrr: 12000, asp: 135, attach: 45, ttp: 65, daily: 571, ftko: 8 },
-  'delta':     { mrr: 15000, asp: 155, attach: 45, ttp: 65, daily: 714, ftko: 8 }
+  'non-delta': { mrr: 12000, asp: 135, attach: 45, ttp: 65, weeklyRev: 2855, ftko: 40 },
+  'delta':     { mrr: 15000, asp: 155, attach: 45, ttp: 65, weeklyRev: 3570, ftko: 40 }
 };
 
+// --- DATE PICKER AUTO-LOAD ---
+function getMondayOfWeek(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = (day === 0) ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d;
+}
+function getSundayOfWeek(date) {
+  const monday = getMondayOfWeek(date);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  return sunday;
+}
+function formatDateMDY(date) {
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+function toInputDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+function updateWeekDisplay() {
+  const input = document.getElementById('reviewDate');
+  if (!input.value) { document.getElementById('weekDisplay').textContent = ''; return; }
+  const selected = new Date(input.value + 'T12:00:00');
+  const monday = getMondayOfWeek(selected);
+  const sunday = getSundayOfWeek(selected);
+  document.getElementById('weekDisplay').textContent = `Week of ${formatDateMDY(monday)} – ${formatDateMDY(sunday)}`;
+}
+function initDatePicker() {
+  // Auto-set to Monday of previous week (the week being reviewed)
+  const today = new Date();
+  const thisMonday = getMondayOfWeek(today);
+  const prevMonday = new Date(thisMonday);
+  prevMonday.setDate(thisMonday.getDate() - 7);
+  const input = document.getElementById('reviewDate');
+  input.value = toInputDate(prevMonday);
+  updateWeekDisplay();
+}
+
+// --- REP TYPE ---
 function setRepType(type) {
   repType = type;
   document.getElementById('btnNonDelta').classList.toggle('active', type === 'non-delta');
   document.getElementById('btnDelta').classList.toggle('active', type === 'delta');
   const g = goals[type];
-  document.getElementById('repTypeHint').textContent = `Goals: MRR $${g.mrr.toLocaleString()} - ASP $${g.asp} - TTP ${g.ttp}% - Daily $${g.daily} - FTKO ${g.ftko}/day`;
+  document.getElementById('repTypeHint').innerHTML = `Weekly Goals: MRR $${g.mrr.toLocaleString()} &bull; ASP $${g.asp} &bull; TTP ${g.ttp}% &bull; Weekly Revenue $${g.weeklyRev.toLocaleString()} &bull; FTKO ${g.ftko}/wk`;
   document.getElementById('goalMRR').textContent = `Goal: $${g.mrr.toLocaleString()}`;
   document.getElementById('goalASP').textContent = `Goal: $${g.asp}`;
-  document.getElementById('goalDaily').textContent = `Goal: $${g.daily}/day`;
+  document.getElementById('goalWeekly').textContent = `Goal: $${g.weeklyRev.toLocaleString()}/wk`;
+  document.getElementById('goalFTKO').textContent = `Goal: ${g.ftko}/wk`;
 }
 
+// --- NOTES TABS ---
+function switchNotesTab(tab) {
+  document.getElementById('tabManagerNotes').classList.toggle('active', tab === 'manager');
+  document.getElementById('tabTranscript').classList.toggle('active', tab === 'transcript');
+  document.getElementById('panelManagerNotes').style.display = tab === 'manager' ? 'block' : 'none';
+  document.getElementById('panelTranscript').style.display = tab === 'transcript' ? 'block' : 'none';
+}
+
+// --- STEP NAVIGATION ---
 function goToStep(step) {
   if (step === 2) {
     const rep = document.getElementById('repName').value.trim();
@@ -280,42 +339,43 @@ function goToStep(step) {
 }
 
 function updateStepIndicator(current) {
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= 4; i++) {
     const si = document.getElementById('si' + i);
     si.classList.remove('active','done');
     if (i < current) si.classList.add('done');
     else if (i === current) si.classList.add('active');
   }
-  for (let i = 1; i <= 2; i++) {
+  for (let i = 1; i <= 3; i++) {
     document.getElementById('sl' + i).classList.toggle('done', i < current);
   }
 }
 
+// --- HELPERS ---
 function parseNum(val) {
-  return parseFloat(val.replace(/[^0-9.]/g, '')) || 0;
+  return parseFloat((val || '').replace(/[^0-9.]/g, '')) || 0;
 }
-
-function getStatus(metric, value, goal) {
+function getStatus(value, goal) {
   const pct = (value / goal) * 100;
   if (pct >= 90) return 'on-track';
   if (pct >= 75) return 'close';
   return 'behind';
 }
+function getStatusLabel(s) { return s === 'on-track' ? 'On Track' : s === 'close' ? 'Close' : 'Behind'; }
+function getStatusEmoji(s) { return s === 'on-track' ? '\u2705' : s === 'close' ? '\u26a0\ufe0f' : '\ud83d\udd34'; }
+function updateStatus(metric) {}
 
-function updateStatus(metric) { /* live visual feedback future */ }
-
-function getStatusLabel(status) {
-  return status === 'on-track' ? 'On Track' : status === 'close' ? 'Close' : 'Behind';
-}
-
-function getStatusEmoji(status) {
-  return status === 'on-track' ? '✅' : status === 'close' ? '⚠️' : '🔴';
-}
-
+// --- GENERATE ---
 function generate() {
   const rep = document.getElementById('repName').value.trim() || 'Rep';
   const manager = document.getElementById('managerName').value.trim() || 'Manager';
-  const period = document.getElementById('reviewPeriod').value.trim() || 'this period';
+  const dateInput = document.getElementById('reviewDate').value;
+  let period = 'this week';
+  if (dateInput) {
+    const selected = new Date(dateInput + 'T12:00:00');
+    const monday = getMondayOfWeek(selected);
+    const sunday = getSundayOfWeek(selected);
+    period = `Week of ${formatDateMDY(monday)}`;
+  }
   const g = goals[repType];
 
   const vals = {
@@ -324,35 +384,66 @@ function generate() {
     attach: document.getElementById('valAttach').value.trim() || 'N/A',
     onCallTTP: document.getElementById('valOnCallTTP').value.trim() || 'N/A',
     overallTTP: document.getElementById('valOverallTTP').value.trim() || 'N/A',
-    daily: document.getElementById('valDaily').value.trim() || 'N/A',
+    weekly: document.getElementById('valWeekly').value.trim() || 'N/A',
     ftko: document.getElementById('valFTKO').value.trim() || 'N/A'
   };
 
   const statuses = {
-    mrr: getStatus('mrr', parseNum(vals.mrr), g.mrr),
-    asp: getStatus('asp', parseNum(vals.asp), g.asp),
-    attach: getStatus('attach', parseNum(vals.attach), g.attach),
-    onCallTTP: getStatus('ttp', parseNum(vals.onCallTTP), g.ttp),
-    overallTTP: getStatus('ttp', parseNum(vals.overallTTP), g.ttp),
-    daily: getStatus('daily', parseNum(vals.daily), g.daily),
-    ftko: getStatus('ftko', parseNum(vals.ftko), g.ftko)
+    mrr: getStatus(parseNum(vals.mrr), g.mrr),
+    asp: getStatus(parseNum(vals.asp), g.asp),
+    attach: getStatus(parseNum(vals.attach), g.attach),
+    onCallTTP: getStatus(parseNum(vals.onCallTTP), g.ttp),
+    overallTTP: getStatus(parseNum(vals.overallTTP), g.ttp),
+    weekly: getStatus(parseNum(vals.weekly), g.weeklyRev),
+    ftko: getStatus(parseNum(vals.ftko), g.ftko)
   };
 
   const hasBehind = Object.values(statuses).some(s => s === 'behind');
   const allOnTrack = Object.values(statuses).every(s => s === 'on-track');
+  const metricLabels = { mrr:'MRR', asp:'ASP', attach:'Attach Rate', onCallTTP:'On-Call TTP', overallTTP:'Overall TTP', weekly:'Weekly Revenue', ftko:'FTKO' };
+  const behindMetrics = Object.entries(statuses).filter(([k,s]) => s==='behind').map(([k]) => metricLabels[k]);
+  const onTrackMetrics = Object.entries(statuses).filter(([k,s]) => s==='on-track').map(([k]) => metricLabels[k]);
 
   // Build badges
   const badgeRow = document.getElementById('badgeRow');
-  const metricLabels = { mrr:'MRR', asp:'ASP', attach:'Attach Rate', onCallTTP:'On-Call TTP', overallTTP:'Overall TTP', daily:'Daily Target', ftko:'FTKO' };
   badgeRow.innerHTML = Object.entries(statuses).map(([k,s]) =>
-    `<div class="badge badge-${s}"><div class="badge-dot" style="background:${s==='on-track'?'#22c55e':s==='close'?'#f59e0b':'#ef4444'}"></div>${metricLabels[k]}: ${vals[k] || 'N/A'}</div>`
+    `<div class="badge badge-${s}"><div class="badge-dot" style="background:${s==='on-track'?'#22c55e':s==='close'?'#f59e0b':'#ef4444'}"></div>${metricLabels[k]}: ${vals[k]}</div>`
   ).join('');
-
   document.getElementById('summaryRepName').textContent = rep + ' - ' + period;
+  // Gather notes
+  const discussionPoints = document.getElementById('discussionPoints').value.trim();
+  const committedActions = document.getElementById('committedActions').value.trim();
+  const coachingFocus = document.getElementById('coachingFocus').value.trim();
+  const zoomTranscript = document.getElementById('zoomTranscript').value.trim();
+  const hasManagerNotes = discussionPoints || committedActions;
+  const hasTranscript = zoomTranscript.length > 50;
 
-  // 1:1 GUIDE
-  const behindMetrics = Object.entries(statuses).filter(([k,s]) => s==='behind').map(([k]) => metricLabels[k]);
-  const onTrackMetrics = Object.entries(statuses).filter(([k,s]) => s==='on-track').map(([k]) => metricLabels[k]);
+  // Build notes section for outputs
+  let notesForGuide = '';
+  let notesForEmail = '';
+  if (hasManagerNotes) {
+    notesForGuide += '\nCALL NOTES FROM THIS SESSION\n';
+    notesForGuide += '------------------------------------\n';
+    if (discussionPoints) notesForGuide += `Discussion Points:\n${discussionPoints}\n`;
+    if (committedActions) notesForGuide += `\nCommitted Actions (captured during call):\n${committedActions}\n`;
+    notesForEmail += '\n------------------------------------\nWHAT WE DISCUSSED\n------------------------------------\n';
+    if (discussionPoints) notesForEmail += `${discussionPoints}\n`;
+  } else if (hasTranscript) {
+    const excerpt = zoomTranscript.length > 800 ? zoomTranscript.substring(0, 800) + '...\n[Full transcript available - excerpt shown]\n' : zoomTranscript + '\n';
+    notesForGuide += '\nTRANSCRIPT / SESSION NOTES\n';
+    notesForGuide += '------------------------------------\n';
+    notesForGuide += excerpt;
+    notesForEmail += '\n------------------------------------\nCALL SUMMARY\n------------------------------------\n';
+    notesForEmail += excerpt;
+  }
+
+  // COMMITTED ACTIONS BLOCK for email
+  let emailActionsBlock = '';
+  if (committedActions) {
+    emailActionsBlock = `\n------------------------------------\nCOMMITTED ACTIONS\n------------------------------------\n${committedActions}\n`;
+  } else {
+    emailActionsBlock = `\n------------------------------------\nCOMMITTED ACTION PLAN\n------------------------------------\nAs discussed, you committed to the following before our next review:\n\n1. ________________________________________\n2. ________________________________________\n3. ________________________________________\n\nTarget completion: ________________________\n`;
+  }
 
   const guide = `TEX 1:1 CONVERSATION GUIDE
 Rep: ${rep} - ${repType === 'delta' ? 'Delta' : 'Non-Delta'}
@@ -362,50 +453,50 @@ Manager: ${manager}
 
 STEP 1 - OPEN THE AGENDA (1-2 min)
 ------------------------------------
-"Hey ${rep}, today we're going to walk through your key metrics for ${period}, understand where you stand against your goals, and align on a clear path forward. This is a performance-focused conversation - have your numbers pulled up if you can."
+"Hey ${rep}, today we are walking through your metrics for ${period}, understanding where you stand against your weekly goals, and aligning on a clear path forward. Have your numbers ready."
 
 Start the TEX Transcription App recording now.
 
 
-STEP 2 - WALK THROUGH EACH METRIC
+STEP 2 - WEEKLY METRICS REVIEW
 ------------------------------------
 
 MRR - Monthly Recurring Revenue
-Your result: ${vals.mrr} - Goal: $${g.mrr.toLocaleString()} ${getStatusEmoji(statuses.mrr)}
-"Your MRR this period is ${vals.mrr} against a goal of $${g.mrr.toLocaleString()}. That puts you at ${statuses.mrr === 'on-track' ? 'at or near' : 'below'} goal. ${statuses.mrr === 'behind' ? 'Walk me through what happened and what your plan is to close the gap.' : statuses.mrr === 'close' ? "You're close - what would it take to push over the line?" : "Great number. What's been working that we can learn from?"}"
+Result: ${vals.mrr} | Goal: $${g.mrr.toLocaleString()} ${getStatusEmoji(statuses.mrr)}
+"Your MRR is ${vals.mrr} against the $${g.mrr.toLocaleString()} monthly target. ${statuses.mrr === 'on-track' ? 'Strong number. What has been driving this?' : statuses.mrr === 'close' ? 'You are close - what would push you over the line before month end?' : 'You are behind. Walk me through what happened this week and what the recovery plan looks like.'}"
 
 ASP - Average Selling Price
-Your result: ${vals.asp} - Goal: $${g.asp} ${getStatusEmoji(statuses.asp)}
-"Your ASP is ${vals.asp} vs the $${g.asp} goal. ${statuses.asp === 'behind' ? 'This tells me deals are being discounted or we are not attaching enough value. Where in the call are we losing pricing confidence?' : statuses.asp === 'close' ? 'Solid - are you consistently presenting the full value stack before pricing?' : 'Nice - you are holding price well. Keep presenting full value before the number.'}"
+Result: ${vals.asp} | Goal: $${g.asp} ${getStatusEmoji(statuses.asp)}
+"ASP is ${vals.asp} vs the $${g.asp} target. ${statuses.asp === 'behind' ? 'Deals are being discounted. Where in the call are you losing pricing confidence - before or after the objection?' : statuses.asp === 'close' ? 'Almost there. Are you presenting the full value stack before naming the price on every call?' : 'Holding price well. Keep presenting full value before the number.'}"
 
 Attachment Rate
-Your result: ${vals.attach} - Goal: 45% ${getStatusEmoji(statuses.attach)}
-"Attachment rate is ${vals.attach} vs the 45% goal. ${statuses.attach === 'behind' ? "At what point in your calls is the attachment offer happening? Let's pull a couple transcripts from the TEX app and identify where the offer is breaking down." : statuses.attach === 'close' ? "Getting there. Are you offering the add-on on every call consistently?" : "Great job on attachment. The TEX app data confirms you are making the offer consistently."}"
+Result: ${vals.attach} | Goal: 45% ${getStatusEmoji(statuses.attach)}
+"Attachment is ${vals.attach} vs 45% for the week. ${statuses.attach === 'behind' ? 'At what point in your calls is the attachment offer happening? Let us pull a couple transcripts from the TEX app and find where it breaks down.' : statuses.attach === 'close' ? 'Getting there. Are you making the offer on every call consistently?' : 'Great attachment. The data shows you are making the offer consistently.'}"
 
-On-Call TTP (Trial-to-Paid on Live Calls)
-Your result: ${vals.onCallTTP} - Goal: 65% ${getStatusEmoji(statuses.onCallTTP)}
-"On-call TTP is ${vals.onCallTTP} against a 65% goal. ${statuses.onCallTTP === 'behind' ? "This is where the TEX transcription data is most powerful. Let's look at 2-3 unconverted calls - I want to find the common objection pattern. Pull up the AI analysis." : statuses.onCallTTP === 'close' ? "You are close. Let's identify the 1-2 call scenarios that are consistently not converting." : "Strong conversion on calls. Are you getting enough call volume to sustain this?"}"
+On-Call TTP
+Result: ${vals.onCallTTP} | Goal: 65% ${getStatusEmoji(statuses.onCallTTP)}
+"On-call TTP this week is ${vals.onCallTTP}. ${statuses.onCallTTP === 'behind' ? 'This is where TEX transcription data is most valuable. Let us look at 2-3 unconverted calls and find the common objection pattern.' : statuses.onCallTTP === 'close' ? 'Close. Identify the 1-2 call scenarios consistently not converting.' : 'Strong conversion. Make sure call volume supports maintaining this.'}"
 
 Overall TTP
-Your result: ${vals.overallTTP} - Goal: 65% ${getStatusEmoji(statuses.overallTTP)}
-"Overall TTP is ${vals.overallTTP}. Compare that to your on-call TTP of ${vals.onCallTTP}. ${parseNum(vals.overallTTP) < parseNum(vals.onCallTTP) ? "The gap tells me you are closing well on calls but not converting enough async or follow-up trials. What does your follow-up process look like?" : "Solid alignment between on-call and overall. Keep that consistency."}"
+Result: ${vals.overallTTP} | Goal: 65% ${getStatusEmoji(statuses.overallTTP)}
+"Overall TTP is ${vals.overallTTP}. Compare to on-call TTP of ${vals.onCallTTP}. ${parseNum(vals.overallTTP) < parseNum(vals.onCallTTP) ? 'The gap shows you close well live but are not converting async follow-ups. What does your follow-up process look like?' : 'Good alignment between on-call and overall. Keep that consistency.'}"
 
-Daily Target
-Your result: ${vals.daily} - Goal: $${g.daily}/day ${getStatusEmoji(statuses.daily)}
-"Daily output is ${vals.daily} vs the $${g.daily}/day target. ${statuses.daily === 'behind' ? "At this pace you will miss your MRR goal. What does a day look like for you right now - what's eating into your productive hours?" : "Good daily output. Consistency here is what drives the MRR number."}"
+Weekly Revenue
+Result: ${vals.weekly} | Goal: $${g.weeklyRev.toLocaleString()}/wk ${getStatusEmoji(statuses.weekly)}
+"Weekly revenue output is ${vals.weekly} vs the $${g.weeklyRev.toLocaleString()} weekly target. ${statuses.weekly === 'behind' ? 'At this pace the MRR goal is at risk. What does a typical day look like for you - what is eating into productive hours?' : 'Good weekly output. Consistency here is what drives the monthly number.'}"
 
-FTKO - Kick-off Calls
-Your result: ${vals.ftko} - Goal: 8/day ${getStatusEmoji(statuses.ftko)}
-"FTKO is ${vals.ftko} per day vs the goal of 8. ${statuses.ftko === 'behind' ? "Volume is part of the equation - fewer kick-offs means fewer conversion opportunities. What is blocking you from hitting 8 per day?" : "Good call volume. Make sure the quality matches the quantity - the TTP numbers will tell us."}"
-
+FTKO - Weekly Kick-offs
+Result: ${vals.ftko} | Goal: ${g.ftko}/wk ${getStatusEmoji(statuses.ftko)}
+"FTKO this week is ${vals.ftko} vs the ${g.ftko}/week goal. ${statuses.ftko === 'behind' ? 'Fewer kick-offs means fewer conversion opportunities. What is blocking you from hitting ${g.ftko} per week?' : 'Good call volume. Make sure the quality matches - the TTP numbers tell us that story.'}"
+${notesForGuide}
 
 STEP 3 - PROGRESS ASSESSMENT
 ------------------------------------
 ${hasBehind ? `BEHIND ON: ${behindMetrics.join(', ')}
-- Ask why they believe they are behind
+- Ask why they believe they are behind on each
 - Have them outline a concrete recovery plan with dates
-- State clearly that these metrics are minimum expectations
-- Document their committed actions before ending the call
+- State clearly that these metrics are minimum weekly expectations
+- Document committed actions before ending the call
 - Remind them the TEX recording captures all commitments made today` : allOnTrack ? `ALL METRICS ON TRACK - Great 1:1!
 - Ask how they are achieving their goals
 - Identify what is working that can be shared with the team
@@ -417,16 +508,12 @@ ${hasBehind ? `BEHIND ON: ${behindMetrics.join(', ')}
 
 STEP 4 - CLOSE WITH COMMITMENTS (2-3 min)
 ------------------------------------
-"Let's wrap up. Based on what we discussed, I need you to commit to [specific actions]. I'll be sending you a written recap after this call. Stop the TEX recording now."
+"Based on what we discussed, I need you to commit to [specific actions]. I will send a written recap after this call. Stop the TEX recording now."
 
-Committed Actions to document:
-[ ] ________________________________________
-[ ] ________________________________________
-[ ] ________________________________________
+${committedActions ? 'Committed Actions (captured during call):\n' + committedActions : 'Committed Actions to document:\n[ ] ________________________________________\n[ ] ________________________________________\n[ ] ________________________________________'}
 
 Next 1:1: ___________________________________`;
 
-  // EMAIL
   const email = `SUBJECT: 1:1 Performance Recap - ${rep} - ${period}
 
 Hi ${rep},
@@ -434,33 +521,22 @@ Hi ${rep},
 Here is a written recap of our 1:1 today covering your performance metrics for ${period}.
 
 ------------------------------------
-CURRENT STANDING
+WEEKLY PERFORMANCE STANDING
 ------------------------------------
-MRR:              ${vals.mrr} - (Goal: $${g.mrr.toLocaleString()}) ${getStatusEmoji(statuses.mrr)} ${getStatusLabel(statuses.mrr)}
-ASP:              ${vals.asp} - (Goal: $${g.asp}) ${getStatusEmoji(statuses.asp)} ${getStatusLabel(statuses.asp)}
-Attachment Rate:  ${vals.attach} - (Goal: 45%) ${getStatusEmoji(statuses.attach)} ${getStatusLabel(statuses.attach)}
-On-Call TTP:      ${vals.onCallTTP} - (Goal: 65%) ${getStatusEmoji(statuses.onCallTTP)} ${getStatusLabel(statuses.onCallTTP)}
-Overall TTP:      ${vals.overallTTP} - (Goal: 65%) ${getStatusEmoji(statuses.overallTTP)} ${getStatusLabel(statuses.overallTTP)}
-Daily Target:     ${vals.daily} - (Goal: $${g.daily}/day) ${getStatusEmoji(statuses.daily)} ${getStatusLabel(statuses.daily)}
-FTKO:             ${vals.ftko} - (Goal: 8/day) ${getStatusEmoji(statuses.ftko)} ${getStatusLabel(statuses.ftko)}
-
-------------------------------------
-COMMITTED ACTION PLAN
-------------------------------------
-As discussed, you committed to the following before our next review:
-
-1. ________________________________________
-2. ________________________________________
-3. ________________________________________
-
-Target completion: ________________________
-
+MRR: ${vals.mrr} (Goal: $${g.mrr.toLocaleString()}) ${getStatusEmoji(statuses.mrr)} ${getStatusLabel(statuses.mrr)}
+ASP: ${vals.asp} (Goal: $${g.asp}) ${getStatusEmoji(statuses.asp)} ${getStatusLabel(statuses.asp)}
+Attachment Rate: ${vals.attach} (Goal: 45%) ${getStatusEmoji(statuses.attach)} ${getStatusLabel(statuses.attach)}
+On-Call TTP: ${vals.onCallTTP} (Goal: 65%) ${getStatusEmoji(statuses.onCallTTP)} ${getStatusLabel(statuses.onCallTTP)}
+Overall TTP: ${vals.overallTTP} (Goal: 65%) ${getStatusEmoji(statuses.overallTTP)} ${getStatusLabel(statuses.overallTTP)}
+Weekly Revenue: ${vals.weekly} (Goal: $${g.weeklyRev.toLocaleString()}/wk) ${getStatusEmoji(statuses.weekly)} ${getStatusLabel(statuses.weekly)}
+FTKO: ${vals.ftko} (Goal: ${g.ftko}/wk) ${getStatusEmoji(statuses.ftko)} ${getStatusLabel(statuses.ftko)}
+${notesForEmail}${emailActionsBlock}
 ------------------------------------
 EXPECTATIONS & NEXT STEPS
 ------------------------------------
-${hasBehind ? `You are currently behind on ${behindMetrics.join(', ')}. I expect to see measurable improvement in these areas by our next 1:1. Continued underperformance against these minimums may result in a formal performance improvement plan.
+${hasBehind ? `You are currently behind on ${behindMetrics.join(', ')}. I expect measurable improvement in these areas by our next 1:1. Continued underperformance against these minimums may result in a formal performance improvement plan.
 
-I have confidence in your ability to turn this around and I'm here to support you in doing so.` : `You are tracking well against your goals this period. Keep the momentum going. Our focus for the next period is to maintain consistency and push toward stretch targets.`}
+I have confidence in your ability to turn this around and I am here to support you.` : `You are tracking well against your weekly goals. Keep the momentum going. Our focus for the next week is to maintain consistency and push toward stretch targets.`}
 
 Please reply confirming you have received and understood this recap.
 
@@ -469,17 +545,17 @@ ${manager}`;
 
   document.getElementById('guideOutput').textContent = guide;
   document.getElementById('emailOutput').textContent = email;
-  goToStep(3);
+  goToStep(4);
 }
 
-async function copyText(id, btnId) {
+async function copyText(id, btnId, label) {
   const text = document.getElementById(id).textContent;
   try {
     await navigator.clipboard.writeText(text);
     const btn = document.getElementById(btnId);
     btn.textContent = 'Copied!';
     btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = id === 'guideOutput' ? 'Copy Guide' : 'Copy Email'; btn.classList.remove('copied'); }, 2000);
+    setTimeout(() => { btn.textContent = label; btn.classList.remove('copied'); }, 2000);
   } catch(e) {
     const el = document.getElementById(id);
     const range = document.createRange();
@@ -492,13 +568,20 @@ async function copyText(id, btnId) {
 function startOver() {
   document.getElementById('repName').value = '';
   document.getElementById('managerName').value = '';
-  document.getElementById('reviewPeriod').value = '';
-  ['MRR','ASP','Attach','OnCallTTP','OverallTTP','Daily','FTKO'].forEach(m => {
+  document.getElementById('discussionPoints').value = '';
+  document.getElementById('committedActions').value = '';
+  document.getElementById('coachingFocus').value = '';
+  document.getElementById('zoomTranscript').value = '';
+  ['MRR','ASP','Attach','OnCallTTP','OverallTTP','Weekly','FTKO'].forEach(m => {
     const el = document.getElementById('val' + m);
     if (el) el.value = '';
   });
+  initDatePicker();
   goToStep(1);
 }
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', initDatePicker);
 </script>
 </body>
 </html>
