@@ -216,10 +216,10 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
 
       <!-- GROQ API KEY -->
       <div class="api-key-row">
-        <label>&#129302; Groq API Key</label>
-        <input type="password" id="groqApiKey" placeholder="gsk_..." autocomplete="off" />
+        <label>&#129302; Gemini API Key</label>
+        <input type="password" id="groqApiKey" placeholder="AIza..." autocomplete="off" />
       </div>
-      <div class="api-key-hint">Free key at <a href="https://console.groq.com" target="_blank">console.groq.com</a> &mdash; no credit card needed. Key is stored in your browser only.</div>
+      <div class="api-key-hint">Free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a> &mdash; no credit card needed. Key is stored in your browser only.</div>
 
       <!-- LIVE RECORDING ZONE -->
       <div class="record-zone">
@@ -386,12 +386,12 @@ function switchNotesTab(tab) {
 // GROQ API KEY PERSISTENCE
 // =============================================
 function loadGroqKey() {
-  const saved = localStorage.getItem('groq_api_key');
+  const saved = localStorage.getItem('gemini_api_key');
   if (saved) document.getElementById('groqApiKey').value = saved;
 }
 function getGroqKey() {
   const key = document.getElementById('groqApiKey').value.trim();
-  if (key) localStorage.setItem('groq_api_key', key);
+  if (key) localStorage.setItem('gemini_api_key', key);
   return key;
 }
 
@@ -485,8 +485,8 @@ function stopRecordingCleanup() {
 // =============================================
 // GROQ AI EXTRACTION
 // =============================================
-async function callGroq(apiKey, transcript) {
-  const prompt = `You are analyzing a manager 1:1 performance conversation transcript. Extract the following from the transcript and respond ONLY with valid JSON, no markdown, no explanation.
+async function callGemini(apiKey, transcript) {
+  const prompt = `You are analyzing a manager 1:1 performance conversation transcript. Extract the following and respond ONLY with valid JSON, no markdown, no explanation.
 
 {
   "discussionPoints": "2-4 sentence summary of key themes and topics discussed",
@@ -497,27 +497,23 @@ async function callGroq(apiKey, transcript) {
 Transcript:
 ${transcript}`;
 
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+  const response = await fetch(url, {
     method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + apiKey,
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'llama3-8b-8192',
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.3,
-      max_tokens: 600
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.3, maxOutputTokens: 600 }
     })
   });
 
   if (!response.ok) {
     const err = await response.json().catch(() => ({}));
-    throw new Error(err.error?.message || 'Groq API error ' + response.status);
+    throw new Error(err.error?.message || 'Gemini API error ' + response.status);
   }
 
   const data = await response.json();
-  const content = data.choices?.[0]?.message?.content || '';
+  const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
   const jsonMatch = content.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error('Could not parse AI response');
   return JSON.parse(jsonMatch[0]);
@@ -528,7 +524,7 @@ async function runGroqExtract() {
   const transcript = finalTranscript.trim();
   if (!transcript) { setGroqStatus('No transcript to extract from.', false); return; }
   if (!apiKey) {
-    setGroqStatus('Enter your Groq API key above to use AI extraction.', false);
+    setGroqStatus('Enter your Gemini API key above to use AI extraction.', false);
     return;
   }
   await doExtract(apiKey, transcript);
@@ -549,7 +545,7 @@ async function doExtract(apiKey, transcript) {
   setGroqStatus('', true);
   document.getElementById('extractedBanner').style.display = 'none';
   try {
-    const result = await callGroq(apiKey, transcript);
+    const result = await callGemini(apiKey, transcript);
     if (result.discussionPoints) document.getElementById('discussionPoints').value = result.discussionPoints;
     if (result.committedActions) document.getElementById('committedActions').value = result.committedActions;
     if (result.coachingFocus) document.getElementById('coachingFocus').value = result.coachingFocus;
@@ -564,7 +560,7 @@ async function doExtract(apiKey, transcript) {
 function setGroqStatus(msg, loading, success) {
   const el = document.getElementById('groqStatus');
   if (loading) {
-    el.innerHTML = '<div class="groq-spinner"></div> Sending to Groq AI (llama3-8b-8192)...';
+    el.innerHTML = '<div class="groq-spinner"></div> Sending to Gemini AI (gemini-1.5-flash)...';
   } else if (success) {
     el.innerHTML = '<span style="color:#4ade80;">✓ ' + msg + '</span>';
   } else {
