@@ -212,7 +212,7 @@ body { font-family: 'Montserrat', sans-serif; background: #0a0e1a; color: #e2e8f
   <div class="view" id="view3">
     <div class="card">
       <div class="card-title">Call Notes &amp; Transcript</div>
-      <p style="font-size:13px;color:#64748b;margin-bottom:20px;line-height:1.6;">Record your 1:1 live using your microphone, or manually type notes. Groq AI will automatically extract committed actions and key themes for the email.</p>
+      <p style="font-size:13px;color:#64748b;margin-bottom:20px;line-height:1.6;">Record your 1:1 live using your microphone, or manually type notes. Gemini AI will automatically extract committed actions and key themes for the email.</p>
 
       <!-- GROQ API KEY -->
       <div class="api-key-row">
@@ -535,7 +535,7 @@ async function runGroqExtractFromPaste() {
   const transcript = document.getElementById('zoomTranscript').value.trim();
   if (!transcript) { setGroqStatus('Paste a transcript first.', false); return; }
   if (!apiKey) {
-    setGroqStatus('Enter your Groq API key above to use AI extraction.', false);
+    setGroqStatus('Enter your Gemini API key above to use AI extraction.', false);
     return;
   }
   await doExtract(apiKey, transcript);
