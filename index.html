@@ -497,7 +497,7 @@ async function callGemini(apiKey, transcript) {
 Transcript:
 ${transcript}`;
 
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey;
   const response = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -560,7 +560,7 @@ async function doExtract(apiKey, transcript) {
 function setGroqStatus(msg, loading, success) {
   const el = document.getElementById('groqStatus');
   if (loading) {
-    el.innerHTML = '<div class="groq-spinner"></div> Sending to Gemini AI (gemini-1.5-flash)...';
+    el.innerHTML = '<div class="groq-spinner"></div> Sending to Gemini AI (gemini-2.0-flash)...';
   } else if (success) {
     el.innerHTML = '<span style="color:#4ade80;">✓ ' + msg + '</span>';
   } else {
